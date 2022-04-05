@@ -33,7 +33,7 @@ int main() {
 
     int** C = createArray(P,M);
     ins(P,M,C);
-    printMatrix(P,M,C);
+    // printMatrix(P,M,C);
 /*
     int** R = createArray(M,P);    
     mulMatrix(M,N,P,A,B,R); 
