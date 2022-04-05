@@ -4,14 +4,14 @@
 #include <pthread.h>
 #include <time.h>
 
-#define RAND_MAX = 9;
+#define RANDOM_MAX = 9;
 
 void ins (int row, int column, int** matrix);
 int** createArray(int m, int n);
 void destroyArray(int** arr);
 void printMatrix(int row, int column, int** matrix);
 void mulMatrix(int row, int column, int column2, int** matrix1, int** matrix2, int** matrixResult);
-
+void mulArray(int *arr1, int *arr2);
 
 int main() {
     
@@ -21,6 +21,7 @@ int main() {
     printf("Inserire num colonne matrice A: ");
     scanf("%d", &N);
     pthread_t tid[M];
+    
 
     int** A = createArray(M,N);
     ins(M,N,A);
@@ -38,7 +39,7 @@ int main() {
 
 
     for(int i=0; i<M; i++)
-        pthread_create();
+        pthread_create(&tid[i], NULL, NULL, NULL);
 
 
 
