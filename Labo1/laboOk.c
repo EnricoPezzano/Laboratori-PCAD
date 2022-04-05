@@ -5,35 +5,16 @@
 
 #define RAND_MAX = 9;
 
-phtread_barrier_t myBarrier;
-
 void ins (int row, int column, int** matrix);
 int** createArray(int m, int n);
 void destroyArray(int** arr);
 void printMatrix(int row, int column, int** matrix);
 void mulMatrix(int row, int column, int column2, int** matrix1, int** matrix2, int** matrixResult);
 
-void *foo(void *vargp) {
-  int myid;
-  myid = *((int *)vargp); //casting del tipo
-  printf("Thread %d\n", myid); //stampa l'identificatore
-  return(0);
-}
 
-void *thread1()
 
 int main() {
-    /*
-    int num_threads = 2;
-    pthread_t tid[num_threads];
-    phread_attr_t attr;
-    void *ret; //puntatore del valore di ritorno
-    int *ptr; //puntatore a int, accediamo allo stack del padre
-    ptr = malloc(sizeof(int)); //alloco spazio per il puntatore a int
-    
-    phtread_barrier_init(&myBarrier,NULL,2);
-    ret = phtread_create(&tid[0], NULL, &thread1)
-    */
+
     int M,N,P;
     printf("Inserire num righe matrice A: ");
     scanf("%d", &M);
