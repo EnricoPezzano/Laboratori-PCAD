@@ -12,7 +12,31 @@ void destroyArray(int** arr);
 void printMatrix(int row, int column, int** matrix);
 void mulMatrix(int row, int column, int column2, int** matrix1, int** matrix2, int** matrixResult);
 
+void *thread1(void *arg) {
+    printf("Starting task 1\n");
+    for(int i=0; i<Iterations; i++) {
+        flag1 = 1;
+        turn = 2;
+        while((flag2 == 1) && (turn == 2)) ;
+        SharedCounter++;
+        flag1 = 0;
+    }
+    printf("Fine Thread 1\n");
+    return 0;
+}
 
+void *thread2(void *arg) {
+    printf("Starting task 1\n");
+    for(int i=0; i<Iterations; i++) {
+        flag1 = 1;
+        turn = 2;
+        while((flag2 == 1) && (turn == 2)) ;
+        SharedCounter++;
+        flag1 = 0;
+    }
+    printf("Fine Thread 1\n");
+    return 0;
+}
 
 int main() {
 
