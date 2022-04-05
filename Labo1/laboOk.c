@@ -39,7 +39,7 @@ int main() {
 
 
     for(int i=0; i<M; i++)
-        pthread_create(&tid[i], NULL, NULL, NULL);
+        pthread_create(&tid[i], NULL, mulArray(), NULL);
 
 
 
