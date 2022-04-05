@@ -14,12 +14,13 @@ void mulMatrix(int row, int column, int column2, int** matrix1, int** matrix2, i
 
 
 int main() {
-
+    
     int M,N,P;
     printf("Inserire num righe matrice A: ");
     scanf("%d", &M);
     printf("Inserire num colonne matrice A: ");
     scanf("%d", &N);
+    pthread_t tid[M];
 
     int** A = createArray(M,N);
     ins(M,N,A);
@@ -34,6 +35,14 @@ int main() {
     int** C = createArray(P,M);
     ins(P,M,C);
     printMatrix(P,M,C);
+
+
+    for(int i=0; i<M; i++)
+        pthread_create();
+
+
+
+
 /*
     int** R = createArray(M,P);    
     mulMatrix(M,N,P,A,B,R); 
