@@ -39,6 +39,11 @@ void printMatrix(int row, int column, int** matrix)
     printf("\n\n");
 }
 
+void *my_task(void *vargp){
+    // gestione della moltiplicazione tra BLOCCHI, gestiti per indirizzo
+    return 0;
+}
+
 
 int main(int argc, char* argv[]) {
     // printf("You have entered %d arguments:\n", argc);
@@ -47,17 +52,26 @@ int main(int argc, char* argv[]) {
     // You have entered 6 arguments:
     // 0 1 2 3 4 5 %
 
-
-
-
-
     int M = atoi(argv[1]);
     int N = atoi(argv[2]); 
     int P = atoi(argv[3]);
+    int T = 4; // da capire come calcolare T
 
-    int **A = createMatrix(M, N);
+    int **A = createMatrix(M, N); // da completare funzione
     int **B = createMatrix(N, P);
+    int **R = createMatrix(N, P);
     int **C = createMatrix(P, M);
+
+    fillMatrix(M,N,A); // da completare funzione
+    fillMatrix(N,P,B);
+
+    pthread_t tid[T]; // da capire come calcolare T
+    my_task_args = 0; // valori/indirizzi degli array delle matrici da moltiplicare
+    for(int i=0; i<T; i++)
+        if(pthread_create(*tid[i], NULL, my_task, my_task_args) == -1)
+            fprintf(stderr, "thread creation error");
+
+
 
     
     
