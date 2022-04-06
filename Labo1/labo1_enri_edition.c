@@ -44,6 +44,12 @@ int main(int argc, char* argv[]) {
     // printf("You have entered %d arguments:\n", argc);
     // for (int i = 0; i < argc; ++i)
     //     printf("%d ", atoi(argv[i]));
+    // You have entered 6 arguments:
+    // 0 1 2 3 4 5 %
+
+
+
+
 
     int M = atoi(argv[1]);
     int N = atoi(argv[2]); 
