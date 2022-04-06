@@ -18,7 +18,7 @@ void destroyMatrix(int** m) {
     free(m);
 }
 
-void ins (int row, int column, int** matrix)
+void fillMatrix (int row, int column, int** matrix)
 {
     for(int i = 0; i < row; i++) {
         for(int j = 0; j < column; j++) {
@@ -41,7 +41,12 @@ void printMatrix(int row, int column, int** matrix)
 
 
 int main() {
-    
+    int M, N, P;
 
+    int **A = createMatrix(M, N);
+    int **B = createMatrix(M, N);
+    int **A = createMatrix(M, N);
+
+    
     return 0;    
 }
