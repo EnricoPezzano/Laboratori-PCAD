@@ -22,7 +22,6 @@ int main() {
     scanf("%d", &N);
     // pthread_t tid[M];
     
-
     int** A = createMatrix(M,N);
     ins(M,N,A);
     printMatrix(M,N,A);
