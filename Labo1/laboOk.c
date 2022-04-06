@@ -7,11 +7,11 @@
 #define RANDOM_MAX = 9;
 
 void ins (int row, int column, int** matrix);
-int** createArray(int m, int n);
-void destroyArray(int** arr);
+int** createMatrix(int m, int n);
+void destroyMatrix(int** m);
 void printMatrix(int row, int column, int** matrix);
 void mulMatrix(int row, int column, int column2, int** matrix1, int** matrix2, int** matrixResult);
-void mulArray(int *arr1, int *arr2);
+// void mulArray(int *arr1, int *arr2);
 
 int main() {
     
@@ -23,23 +23,23 @@ int main() {
     // pthread_t tid[M];
     
 
-    int** A = createArray(M,N);
+    int** A = createMatrix(M,N);
     ins(M,N,A);
     printMatrix(M,N,A);
 
     printf("Inserire num colonne matrice B: ");
     scanf("%d", &P);
-    int** B = createArray(N,P);
+    int** B = createMatrix(N,P);
     ins(N,P,B);
     printMatrix(N,P,B);
 
-    int** C = createArray(P,M);
+    int** C = createMatrix(P,M);
     ins(P,M,C);
     printMatrix(P,M,C);
 
 
     for(int i=0; i<M; i++)
-        pthread_create(&tid[i], NULL, mulArray(), NULL);
+        // pthread_create(&tid[i], NULL, mulArray(), NULL);
 
 
 
@@ -55,10 +55,10 @@ int main() {
     mulMatrix(P,M,P,C,R,Q);
     printMatrix(P,P,Q);
 */  
-    
+    return 0;    
 }
 
-int** createArray(int m, int n) {
+int** createMatrix(int m, int n) {
     int* values = calloc(m*n, sizeof(int));
     int** rows = malloc(m*sizeof(int*));
     for (int i=0; i<m; ++i) {
@@ -67,9 +67,9 @@ int** createArray(int m, int n) {
     return rows;
 }
 
-void destroyArray(int** arr) {
-    free(*arr);
-    free(arr);
+void destroyMatrix(int** m) {
+    free(*m);
+    free(m);
 }
 
 void ins (int row, int column, int** matrix)
