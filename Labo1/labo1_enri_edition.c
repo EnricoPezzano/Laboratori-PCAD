@@ -41,6 +41,7 @@ void printMatrix(int row, int column, int** matrix)
 
 void *my_task(void *vargp){
     // gestione della moltiplicazione tra BLOCCHI, gestiti per indirizzo
+    // dovrebbe fare blocco x V e metterlo nell'indirizzo corretto di R
     return 0;
 }
 
@@ -55,7 +56,7 @@ int main(int argc, char* argv[]) {
     int M = atoi(argv[1]);
     int N = atoi(argv[2]); 
     int P = atoi(argv[3]);
-    int T = 4; // da capire come calcolare T
+    int T = atoi(argv[4]); // da aggiungere controlli sul valore di T
 
     int **A = createMatrix(M, N); // da completare funzione
     int **B = createMatrix(N, P);
@@ -75,12 +76,15 @@ int main(int argc, char* argv[]) {
             int *block = 99; // valori/indirizzi del BLOCCO di A da moltiplicare per V, ogni volta da cambiare
             if(pthread_create(&tid[i], NULL, my_task, block, V) == -1)
                 fprintf(stderr, "thread creation error");
-            
+            // p
         }
     }
 
-    
-    
+    // barriera di sincronizzazione per i thread di AxB
+
+    // altro codice multithreading per C x R
+
+    // terminazione dei thread
   
 
     return 0;    
