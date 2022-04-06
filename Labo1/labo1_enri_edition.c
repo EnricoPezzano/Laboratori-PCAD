@@ -40,13 +40,22 @@ void printMatrix(int row, int column, int** matrix)
 }
 
 
-int main() {
-    int M, N, P;
+int main(int argc, char* argv[]) {
+    // printf("You have entered %d arguments:\n", argc);
+    // for (int i = 0; i < argc; ++i)
+    //     printf("%d ", atoi(argv[i]));
+
+    int M = atoi(argv[1]);
+    int N = atoi(argv[2]); 
+    int P = atoi(argv[3]);
 
     int **A = createMatrix(M, N);
-    int **B = createMatrix(M, N);
-    int **A = createMatrix(M, N);
+    int **B = createMatrix(N, P);
+    int **C = createMatrix(P, M);
 
     
+    
+  
+
     return 0;    
 }
