@@ -20,7 +20,7 @@ int main() {
     scanf("%d", &M);
     printf("Inserire num colonne matrice A: ");
     scanf("%d", &N);
-    pthread_t tid[M];
+    // pthread_t tid[M];
     
 
     int** A = createArray(M,N);
