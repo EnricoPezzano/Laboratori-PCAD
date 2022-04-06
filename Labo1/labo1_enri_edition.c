@@ -66,12 +66,18 @@ int main(int argc, char* argv[]) {
     fillMatrix(N,P,B);
 
     pthread_t tid[T]; // da capire come calcolare T
-    my_task_args = 0; // valori/indirizzi degli array delle matrici da moltiplicare
-    for(int i=0; i<T; i++)
-        if(pthread_create(*tid[i], NULL, my_task, my_task_args) == -1)
-            fprintf(stderr, "thread creation error");
+    
+    for(int j=0; j<P; j++){
 
+        int *V = 99; // valori/indirizzo della colonna di B, che scorro col for
 
+        for(int i=0; i<T; i++){ // fa questo ciclo per il # di blocchi
+            int *block = 99; // valori/indirizzi del BLOCCO di A da moltiplicare per V, ogni volta da cambiare
+            if(pthread_create(&tid[i], NULL, my_task, block, V) == -1)
+                fprintf(stderr, "thread creation error");
+            
+        }
+    }
 
     
     
