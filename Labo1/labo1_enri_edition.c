@@ -53,6 +53,8 @@ int main(int argc, char* argv[]) {
     // You have entered 6 arguments:
     // 0 1 2 3 4 5 %
 
+    // da aggiungere controlli vari su argv
+
     int M = atoi(argv[1]);
     int N = atoi(argv[2]); 
     int P = atoi(argv[3]);
@@ -76,13 +78,15 @@ int main(int argc, char* argv[]) {
             int *block = 99; // valori/indirizzi del BLOCCO di A da moltiplicare per V, ogni volta da cambiare
             if(pthread_create(&tid[i], NULL, my_task, block, V) == -1)
                 fprintf(stderr, "thread creation error");
-            // p
+
         }
     }
 
-    // barriera di sincronizzazione per i thread di AxB
+    // barriera di sincronizzazione per i thread di A x B
+    // i thread devono attendere in barriera la prima parte di calcolo
+    pthread_barrier_t barrier = PTHREAD_BARRIER_INITIALIZER(T); // T numero di thread da sincronizzare
 
-    // altro codice multithreading per C x R
+    // altro codice multithreading per C x R con gli stessi thread di prima
 
     // terminazione dei thread
   
