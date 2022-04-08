@@ -5,7 +5,7 @@
 #include <time.h>
 
 pthread_barrier_t barrier;
-int M,N,P; // Numero righe e colonne delle matrici
+int M,N,P; // Numero righe e colonne delle matrici 
 int T; // Numero di thread utilizzati
 
 void ins (int row, int column, int** matrix); // inserisce valori random da 0 a 9 nella matrice
