@@ -5,7 +5,8 @@
 #include <time.h>
 
 pthread_barrier_t barrier;
-int M,N,P, N_THREADS = 3;
+int M,N,P;
+
 
 void ins (int row, int column, int** matrix);
 int** createArray(int m, int n);
