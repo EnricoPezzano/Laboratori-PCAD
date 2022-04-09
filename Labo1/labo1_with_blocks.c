@@ -82,12 +82,15 @@ int main() {
     R.cols = P;
 
     pthread_t tid[T];
-    int count = 0;
+    int* count = malloc(sizeof(int));
+    *count = 0;
     for(int i=0; i < T*(M/T); i+=M/T) {
         int* k= malloc(sizeof(int)); 
         *k=i; 
-        pthread_create(&tid[count], NULL, &mul,  (void*) k); 
-        count++;
+        pthread_create(&tid[*count], NULL, &mul,  (void*) k); 
+        
+        printf("COUNT: %d\n", *count);
+        *count =+ 1;
         // creo il thread passando k (sarebbe come passare i)
         // Se passassi direttamente i, i thread vedrebbero valori uguali o incasinati,
         // in questo modo salvo il valore di i in una zona di memoria puntata da k
@@ -98,7 +101,7 @@ int main() {
     pthread_barrier_wait(&barrier);
 
     for(int i=0; i<T; i++) {
-        pthread_join(tid[T], NULL);
+        pthread_join(tid[i], NULL);
         printf("Join %d\n", i);
     }
 
