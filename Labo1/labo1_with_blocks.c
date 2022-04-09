@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <time.h>
 
-pthread_barrier_t barrier;
+pthread_barrier_t barrier; // identificatore "pthread_barrier_t" non definito
 int M,N,P; // Numero righe e colonne delle matrici 
 int T; // Numero di thread utilizzati
 
