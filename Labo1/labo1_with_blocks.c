@@ -41,6 +41,7 @@ void *mul(void *arg) {
             // avrò calcolato tutta la riga indexRow di R
 
             R.data[z][i] = moltiplicazione;
+            //printf("%d", R.data[z][i]);
             moltiplicazione = 0; 
         }  
         printf("\n");
@@ -80,8 +81,7 @@ int main() {
     R.rows = M;
     R.cols = P;
 
-    int num_threads = M; // Verranno creati tanti thread quante sono le righe della matrice A
-    pthread_t tid[M];
+    pthread_t tid[T];
     int count = 0;
     for(int i=0; i < T*(M/T); i+=M/T) {
         int* k= malloc(sizeof(int)); 
@@ -95,8 +95,11 @@ int main() {
         // nel prossimo ciclo a k* verrà assengato il valore di i incrementato
     }
 
+    pthread_barrier_wait(&barrier);
+
     for(int i=0; i<T; i++) {
         pthread_join(tid[T], NULL);
+        printf("Join %d\n", i);
     }
 
     pthread_barrier_destroy(&barrier);
