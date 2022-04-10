@@ -23,12 +23,13 @@ typedef struct matrix { // Ogni matrice è una struct
 // A B e R sono matrici globali, in modo che possano essere viste anche dai thread
 struct matrix A;
 struct matrix B;
-struct matrix R;
+struct matrix R; // Risultato AxB
+struct matrix C;
+struct matrix Q; // Risultato CxR
 
 void *mul(void *arg) {
     int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
     free(arg); // libero k* (la zona di memoria puntata da k)
-    printf("indexRow: %d\n", indexRow); // serve per il debug
     int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
     
     // Moltiplico la riga indexRow di A per tutte le colonne di B
@@ -37,7 +38,6 @@ void *mul(void *arg) {
             for(int j=0; j<B.rows; j++) {
                 moltiplicazione += A.data[z][j]*B.data[j][i];
             }
-            printf("%d ", z);
             // salvo il risultato nella riga indexRow di R, al termine del ciclo 
             // avrò calcolato tutta la riga indexRow di R
 
@@ -45,10 +45,30 @@ void *mul(void *arg) {
             //printf("%d", R.data[z][i]);
             moltiplicazione = 0; 
         }  
-        printf("\n");
     }
     pthread_barrier_wait(&barrier);
-    printf("RUNNING\n");
+}
+
+void *mul2(void *arg) {
+    int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
+    free(arg); // libero k* (la zona di memoria puntata da k)
+    int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
+    
+    // Moltiplico la riga indexRow di A per tutte le colonne di B
+    for(int z=indexRow; z < indexRow+(P/T); z++) { 
+        for(int i=0; i<R.cols; i++) { 
+            for(int j=0; j<R.rows; j++) {
+                moltiplicazione += C.data[z][j]*R.data[j][i];
+            }
+            // salvo il risultato nella riga indexRow di R, al termine del ciclo 
+            // avrò calcolato tutta la riga indexRow di R
+
+            Q.data[z][i] = moltiplicazione;
+            //printf("%d", R.data[z][i]);
+            moltiplicazione = 0; 
+        }  
+    }
+    pthread_barrier_wait(&barrier);
 }
 
 int main() {
@@ -61,9 +81,12 @@ int main() {
     printf("Inserire num colonne matrice B: "); 
     scanf("%d", &P);
 
-    printf("Inserire numero di thread da utilizzare: " );
-    scanf("%d", &T);
-
+    while (1) {
+        printf("Inserire numero di thread da utilizzare: " );
+        scanf("%d", &T);
+        if(P%T == 0) break;
+        printf("\nIl numero di thread deve essere un divisore del numero di righe di A!\n");
+    }
     pthread_barrier_init(&barrier, NULL, T+1); // inizializzo la barriera
     A.data = createArray(M,N); // creo la matrice A
     A.rows = M;
@@ -73,24 +96,40 @@ int main() {
     B.rows = N;
     B.cols = P;
 
-    ins(A.rows, A.cols, A.data);
-    ins(B.rows, B.cols, B.data);
-    printMatrix(A.rows, A.cols, A.data);
-    printMatrix(B.rows, B.cols, B.data);
+    C.data = createArray(P,M); // creo la matrice C
+    C.rows = P;
+    C.cols = M;
 
     R.data = createArray(M,P); // creo la matrice R
     R.rows = M;
     R.cols = P;
 
+    Q.data = createArray(P,P); // creo la matrice Q
+    Q.rows = P;
+    Q.cols = P;
+
+    ins(A.rows, A.cols, A.data);
+    ins(B.rows, B.cols, B.data);
+    ins(C.rows, C.cols, C.data);
+    printf("\nMatrice A \n\n");
+    printMatrix(A.rows, A.cols, A.data);
+    printf("Matrice B \n\n");
+    printMatrix(B.rows, B.cols, B.data);
+    printf("Maitrce C\n\n");
+    printMatrix(C.rows, C.cols, C.data);
+
+    
+
+    
+
     pthread_t tid[T];
 
+    // ################# MOLTIPLICO AxB #################
+    
     for(int i=0, j=0; i < T*(M/T); i+=M/T, j++) {
         int* k= malloc(sizeof(int)); 
         *k=i; 
         pthread_create(&tid[j], NULL, &mul,  (void*) k); 
-    
-        //printf("COUNT: %d\n", *count);
-        //*count =+ 1;
         // creo il thread passando k (sarebbe come passare i)
         // Se passassi direttamente i, i thread vedrebbero valori uguali o incasinati,
         // in questo modo salvo il valore di i in una zona di memoria puntata da k
@@ -102,14 +141,37 @@ int main() {
 
     for(int i=0; i<T; i++) {
         pthread_join(tid[i], NULL);
-        printf("Join %d\n", i);
     }
 
     pthread_barrier_destroy(&barrier);
+
+    printf("Matrice R \n\n");
     printMatrix(M,P,R.data);
+
+    // ################# MOLTIPLICO CxR #################
+
+    for(int i=0, j=0; i < T*(P/T); i+=P/T, j++) {
+        int* k= malloc(sizeof(int)); 
+        *k=i; 
+        pthread_create(&tid[j], NULL, &mul2,  (void*) k); 
+    }
+
+    pthread_barrier_wait(&barrier);
+
+    for(int i=0; i<T; i++) {
+        pthread_join(tid[i], NULL);
+    }
+
+    printf("Matrice Q =  C*(A*B) \n\n");
+    printMatrix(P,P,Q.data);
+    printf("\nNumero di Thread T utilizzati: %d\n", T);
+    pthread_barrier_destroy(&barrier);
+
     destroyArray(A.data);
     destroyArray(B.data);
+    destroyArray(C.data);
     destroyArray(R.data);
+    destroyArray(Q.data);
 }
 
 
