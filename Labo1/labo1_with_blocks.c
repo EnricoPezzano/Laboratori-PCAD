@@ -8,6 +8,7 @@ pthread_barrier_t barrier; // identificatore "pthread_barrier_t" non definito
 int M,N,P; // Numero righe e colonne delle matrici 
 int T; // Numero di thread utilizzati
 
+
 void ins (int row, int column, int** matrix); // inserisce valori random da 0 a 9 nella matrice
 int** createArray(int m, int n); // crea l'array bidimensionale che conterrà la matrice
 void destroyArray(int** arr); // elimina la matrice, libera la memoria 
@@ -82,15 +83,14 @@ int main() {
     R.cols = P;
 
     pthread_t tid[T];
-    int* count = malloc(sizeof(int));
-    *count = 0;
-    for(int i=0; i < T*(M/T); i+=M/T) {
+
+    for(int i=0, j=0; i < T*(M/T); i+=M/T, j++) {
         int* k= malloc(sizeof(int)); 
         *k=i; 
-        pthread_create(&tid[*count], NULL, &mul,  (void*) k); 
-        
-        printf("COUNT: %d\n", *count);
-        *count =+ 1;
+        pthread_create(&tid[j], NULL, &mul,  (void*) k); 
+    
+        //printf("COUNT: %d\n", *count);
+        //*count =+ 1;
         // creo il thread passando k (sarebbe come passare i)
         // Se passassi direttamente i, i thread vedrebbero valori uguali o incasinati,
         // in questo modo salvo il valore di i in una zona di memoria puntata da k
