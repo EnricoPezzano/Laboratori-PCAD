@@ -126,6 +126,7 @@ int main() {
 
     // ################# MOLTIPLICO AxB #################
     
+    long before = clock();
     for(int i=0, j=0; i < T*(M/T); i+=M/T, j++) {
         int* k= malloc(sizeof(int)); 
         *k=i; 
@@ -145,9 +146,6 @@ int main() {
 
     pthread_barrier_destroy(&barrier);
 
-    printf("Matrice R \n\n");
-    printMatrix(M,P,R.data);
-
     // ################# MOLTIPLICO CxR #################
 
     for(int i=0, j=0; i < T*(P/T); i+=P/T, j++) {
@@ -162,11 +160,16 @@ int main() {
         pthread_join(tid[i], NULL);
     }
 
-    printf("Matrice Q =  C*(A*B) \n\n");
-    printMatrix(P,P,Q.data);
-    printf("\nNumero di Thread T utilizzati: %d\n", T);
     pthread_barrier_destroy(&barrier);
 
+    long after = clock();
+    double elapsed = (double)(after-before)/CLOCKS_PER_SEC;
+
+    printf("Matrice Q =  C*(A*B) \n\n");
+    printMatrix(P,P,Q.data);
+    printf("Tempo di calcolo C*(A*B): %lf\n\n", elapsed);
+    printf("\nNumero di Thread T utilizzati: %d\n", T);
+    
     destroyArray(A.data);
     destroyArray(B.data);
     destroyArray(C.data);
