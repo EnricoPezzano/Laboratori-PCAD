@@ -164,8 +164,8 @@ int main()
     
     long before = clock();
     for(int i=0, j=0; i < T*(M/T); i+=M/T, j++) {
-        int* k= malloc(sizeof(int)); 
-        *k=i; 
+        int* k = malloc(sizeof(int)); 
+        *k = i; 
         pthread_create(&tid[j], NULL, &mul,  (void*) k); 
         // creo il thread passando k (sarebbe come passare i)
         // Se passassi direttamente i, i thread vedrebbero valori uguali o incasinati,
@@ -176,9 +176,8 @@ int main()
 
     pthread_barrier_wait(&barrier);
 
-    for(int i=0; i<T; i++) {
+    for(int i=0; i<T; i++)
         pthread_join(tid[i], NULL);
-    }
 
     pthread_barrier_destroy(&barrier);
 
