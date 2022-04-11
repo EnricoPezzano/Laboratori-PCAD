@@ -117,7 +117,7 @@ int main()
     while (1) {
         printf("Inserire numero di thread da utilizzare: " );
         scanf("%d", &T);
-        if(P%T == 0) break;
+        if(P%T==0 || P==T) break;
         printf("\nIl numero di thread deve essere un divisore del numero di righe di A!\n");
     }
     pthread_barrier_init(&barrier, NULL, T+1); // inizializzo la barriera
