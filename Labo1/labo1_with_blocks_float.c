@@ -3,6 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <time.h>
+#include </Users/enrico/pthread-barrier-macos-master/source/pthread_barrier.c> // COMMENT IF NOT MACOS :)
 
 pthread_barrier_t barrier; // identificatore "pthread_barrier_t" non definito
 int M,N,P; // Numero righe e colonne delle matrici 
