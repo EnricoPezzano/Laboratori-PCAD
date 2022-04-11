@@ -84,11 +84,11 @@ void *mul(void *arg) {
             moltiplicazione = 0; 
         }  
     }
+    indexRow = 0;
     printf("\nSono il thread: %d. Ho finito la prima moltiplicazione.", pthread_self());
     printf("\n");
     pthread_barrier_wait(&barrier);
 
-    indexRow = 0;
     // Moltiplico CxR
     for(int z=indexRow; z < indexRow+(P/T); z++) { 
         for(int i=0; i<R.cols; i++) { 
@@ -123,7 +123,7 @@ int main()
         printf("\nIl numero di thread deve essere un divisore del numero di righe di A!\n");
     }
 
-    pthread_barrier_init(&barrier, NULL, T+1); // inizializzo la barriera
+    pthread_barrier_init(&barrier, NULL, T); // inizializzo la barriera
     A.data = createArray(M,N); // creo la matrice A
     A.rows = M;
     A.cols = N;
@@ -151,7 +151,7 @@ int main()
     printMatrix(A.rows, A.cols, A.data);
     printf("Matrice B \n\n");
     printMatrix(B.rows, B.cols, B.data);
-    printf("Maitrce C\n\n");
+    printf("Matrice C\n\n");
     printMatrix(C.rows, C.cols, C.data);
     
     pthread_t tid[T];
