@@ -22,8 +22,15 @@ struct matrix R; // Risultato AxB
 struct matrix C;
 struct matrix Q; // Risultato CxR
 
-void ins (int row, int column, int** matrix) // inserisce valori random da 0 a 9 nella matrice
-{
+void float_filling(int row, int column, float** matrix){
+    for(int i = 0; i < row; i++)
+        for(int j = 0; j < column; j++) {
+            matrix[i][j] = rand()%10; // parte intera casuale
+            matrix[i][j] += (rand()%10)/10; // parte decimale casuale
+        }
+}
+
+void ins (int row, int column, int** matrix){ // inserisce valori random da 0 a 9 nella matrice
     for(int i = 0; i < row; i++) {
         for(int j = 0; j < column; j++) {
             matrix[i][j] = rand()%10;
@@ -40,14 +47,13 @@ int** createArray(int m, int n) { // crea l'array bidimensionale che conterrà l
     return rows;
 }
 
-void destroyArray(int** arr) {  // elimina la matrice, libera la memoria 
+void destroyArray(int** arr) { // elimina la matrice, libera la memoria 
     free(*arr);
     free(arr);
 }
 
 
-void printMatrix(int row, int column, int** matrix) // stampa la matrice
-{
+void printMatrix(int row, int column, int** matrix){ // stampa la matrice
     for(int i = 0; i < row; i++) {
         printf("|   ");
         for(int j = 0; j < column; j++) {
@@ -117,9 +123,10 @@ int main()
     while (1) {
         printf("Inserire numero di thread da utilizzare: " );
         scanf("%d", &T);
-        if(P%T==0 || P==T) break;
+        if(P%T==0 || P==T || T==1) break;
         printf("\nIl numero di thread deve essere un divisore del numero di righe di A!\n");
     }
+
     pthread_barrier_init(&barrier, NULL, T+1); // inizializzo la barriera
     A.data = createArray(M,N); // creo la matrice A
     A.rows = M;
