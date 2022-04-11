@@ -32,6 +32,8 @@ void *mul(void *arg) {
     free(arg); // libero k* (la zona di memoria puntata da k)
     int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
     
+    pthread_self(); // che processo sono?
+
     // Moltiplico la riga indexRow di A per tutte le colonne di B
     for(int z=indexRow; z < indexRow+(M/T); z++) { 
         for(int i=0; i<B.cols; i++) { 
