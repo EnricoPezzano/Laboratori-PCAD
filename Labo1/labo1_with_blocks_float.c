@@ -70,15 +70,12 @@ void *mul(void *arg) {
     int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
     free(arg); // libero k* (la zona di memoria puntata da k)
     int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
-    
-    
 
     // Moltiplico la riga indexRow di A per tutte le colonne di B
     for(int z=indexRow; z < indexRow+(M/T); z++) { 
         for(int i=0; i<B.cols; i++) { 
-            for(int j=0; j<B.rows; j++) {
+            for(int j=0; j<B.rows; j++)
                 moltiplicazione += A.data[z][j]*B.data[j][i];
-            }
             // salvo il risultato nella riga indexRow di R, al termine del ciclo 
             // avrò calcolato tutta la riga indexRow di R
 
@@ -87,17 +84,12 @@ void *mul(void *arg) {
             moltiplicazione = 0; 
         }  
     }
-    pthread_barrier_wait(&barrier);
-    printf("\nSono il thread: %d. Ho finito.", pthread_self());
+    printf("\nSono il thread: %d. Ho finito la prima moltiplicazione.", pthread_self());
     printf("\n");
-}
+    pthread_barrier_wait(&barrier);
 
-void *mul2(void *arg) {
-    int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
-    free(arg); // libero k* (la zona di memoria puntata da k)
-    int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
-    
-    // Moltiplico la riga indexRow di A per tutte le colonne di B
+    indexRow = 0;
+    // Moltiplico CxR
     for(int z=indexRow; z < indexRow+(P/T); z++) { 
         for(int i=0; i<R.cols; i++) { 
             for(int j=0; j<R.rows; j++) {
@@ -107,11 +99,11 @@ void *mul2(void *arg) {
             // avrò calcolato tutta la riga indexRow di R
 
             Q.data[z][i] = moltiplicazione;
-            //printf("%d", R.data[z][i]);
             moltiplicazione = 0; 
         }  
     }
-    pthread_barrier_wait(&barrier);
+    printf("\nSono il thread: %d. Ho finito la seconda moltiplicazione.", pthread_self());
+    printf("\n");
 }
 
 int main()
@@ -163,8 +155,6 @@ int main()
     printMatrix(C.rows, C.cols, C.data);
     
     pthread_t tid[T];
-
-    // ################# MOLTIPLICO AxB #################
     
     long before = clock();
     for(int i=0, j=0; i < T*(M/T); i+=M/T, j++) {
@@ -178,27 +168,15 @@ int main()
         // nel prossimo ciclo a k* verrà assengato il valore di i incrementato
     }
 
-    if(pthread_barrier_wait(&barrier) == -1)
-        fprintf(sterr, "pthread_barrier_wait error :(");    
+    // for(int i=0, j=0; i < T*(P/T); i+=P/T, j++) {
+    //     int* k= malloc(sizeof(int)); 
+    //     *k=i; 
+    //     pthread_create(&tid[j], NULL, &mul2,  (void*) k); 
+    // }
+
 
     for(int i=0; i<T; i++)
         pthread_join(tid[i], NULL);
-
-    pthread_barrier_destroy(&barrier);
-
-    // ################# MOLTIPLICO CxR #################
-
-    for(int i=0, j=0; i < T*(P/T); i+=P/T, j++) {
-        int* k= malloc(sizeof(int)); 
-        *k=i; 
-        pthread_create(&tid[j], NULL, &mul2,  (void*) k); 
-    }
-
-    pthread_barrier_wait(&barrier);
-
-    for(int i=0; i<T; i++)
-        pthread_join(tid[i], NULL);
-
     pthread_barrier_destroy(&barrier);
 
     long after = clock();
