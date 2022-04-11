@@ -9,12 +9,6 @@ pthread_barrier_t barrier; // identificatore "pthread_barrier_t" non definito
 int M,N,P; // Numero righe e colonne delle matrici 
 int T; // Numero di thread utilizzati
 
-
-void ins (int row, int column, int** matrix); // inserisce valori random da 0 a 9 nella matrice
-int** createArray(int m, int n); // crea l'array bidimensionale che conterrà la matrice
-void destroyArray(int** arr); // elimina la matrice, libera la memoria 
-void printMatrix(int row, int column, int** matrix); // stampa la matrice
-
 typedef struct matrix { // Ogni matrice è una struct 
     int rows; // numero righe
     int cols; // num colonne
@@ -27,6 +21,42 @@ struct matrix B;
 struct matrix R; // Risultato AxB
 struct matrix C;
 struct matrix Q; // Risultato CxR
+
+void ins (int row, int column, int** matrix) // inserisce valori random da 0 a 9 nella matrice
+{
+    for(int i = 0; i < row; i++) {
+        for(int j = 0; j < column; j++) {
+            matrix[i][j] = rand()%10;
+        }
+    }
+}
+
+int** createArray(int m, int n) { // crea l'array bidimensionale che conterrà la matrice
+    int* values = calloc(m*n, sizeof(int));
+    int** rows = malloc(m*sizeof(int*));
+    for (int i=0; i<m; ++i) {
+        rows[i] = values + i*n;
+    }
+    return rows;
+}
+
+void destroyArray(int** arr) {  // elimina la matrice, libera la memoria 
+    free(*arr);
+    free(arr);
+}
+
+
+void printMatrix(int row, int column, int** matrix) // stampa la matrice
+{
+    for(int i = 0; i < row; i++) {
+        printf("|   ");
+        for(int j = 0; j < column; j++) {
+            printf("%d   ", matrix[i][j]);
+        }
+        printf("|\n");
+    }
+    printf("\n\n");
+}
 
 void *mul(void *arg) {
     int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
@@ -74,8 +104,8 @@ void *mul2(void *arg) {
     pthread_barrier_wait(&barrier);
 }
 
-int main() {
-
+int main()
+{
     // L'utente inserisce numero righe e colonne della prima matrice (A)
     printf("Inserire num righe matrice A: ");
     scanf("%d", &M); 
@@ -178,40 +208,4 @@ int main() {
     destroyArray(C.data);
     destroyArray(R.data);
     destroyArray(Q.data);
-}
-
-
-int** createArray(int m, int n) {
-    int* values = calloc(m*n, sizeof(int));
-    int** rows = malloc(m*sizeof(int*));
-    for (int i=0; i<m; ++i) {
-        rows[i] = values + i*n;
-    }
-    return rows;
-}
-
-void destroyArray(int** arr) {
-    free(*arr);
-    free(arr);
-}
-
-void ins (int row, int column, int** matrix)
-{
-    for(int i = 0; i < row; i++) {
-        for(int j = 0; j < column; j++) {
-            matrix[i][j] = rand()%10;
-        }
-    }
-}
-
-void printMatrix(int row, int column, int** matrix)
-{
-    for(int i = 0; i < row; i++) {
-        printf("|   ");
-        for(int j = 0; j < column; j++) {
-            printf("%d   ", matrix[i][j]);
-        }
-        printf("|\n");
-    }
-    printf("\n\n");
 }
