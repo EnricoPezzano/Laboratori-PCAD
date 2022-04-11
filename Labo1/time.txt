@@ -1,0 +1,6 @@
+Numero thread utilizzati: 0
+Tempo di calcolo C*(A*B): 0.000073
+
+Numero thread utilizzati: 3
+Tempo di calcolo C*(A*B): 0.002597
+

@@ -65,11 +65,13 @@ void printMatrix(int row, int column, int** matrix){ // stampa la matrice
 }
 
 void *mul(void *arg) {
+    printf("\nSono il thread: %d. Inizio la mia task.", pthread_self());
+
     int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
     free(arg); // libero k* (la zona di memoria puntata da k)
     int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
     
-    pthread_self(); // che processo sono?
+    
 
     // Moltiplico la riga indexRow di A per tutte le colonne di B
     for(int z=indexRow; z < indexRow+(M/T); z++) { 
@@ -86,6 +88,8 @@ void *mul(void *arg) {
         }  
     }
     pthread_barrier_wait(&barrier);
+    printf("\nSono il thread: %d. Ho finito.", pthread_self());
+    printf("\n");
 }
 
 void *mul2(void *arg) {
@@ -191,19 +195,24 @@ int main()
 
     pthread_barrier_wait(&barrier);
 
-    for(int i=0; i<T; i++) {
+    for(int i=0; i<T; i++)
         pthread_join(tid[i], NULL);
-    }
 
     pthread_barrier_destroy(&barrier);
 
     long after = clock();
-    double elapsed = (double)(after-before)/CLOCKS_PER_SEC;
+    double time = (double)(after-before)/CLOCKS_PER_SEC;
 
     printf("Matrice Q =  C*(A*B) \n\n");
     printMatrix(P,P,Q.data);
-    printf("Tempo di calcolo C*(A*B): %lf\n\n", elapsed);
+    printf("Tempo di calcolo C*(A*B): %lf\n\n", time);
     printf("\nNumero di Thread T utilizzati: %d\n", T);
+
+    FILE *fp;
+    fp = fopen("time.txt", "a");
+    fprintf(fp, "Numero thread utilizzati: %d\n", T);
+    fprintf(fp, "Tempo di calcolo C*(A*B): %lf\n\n", time);
+    fclose(fp);
     
     destroyArray(A.data);
     destroyArray(B.data);
