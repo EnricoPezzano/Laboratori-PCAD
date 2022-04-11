@@ -123,7 +123,7 @@ int main()
     while (1) {
         printf("Inserire numero di thread da utilizzare: " );
         scanf("%d", &T);
-        if(P%T==0 || P==T || T==1) break;
+        if(P%T==0 || M==T || T==1) break;
         printf("\nIl numero di thread deve essere un divisore del numero di righe di A!\n");
     }
 
@@ -157,11 +157,7 @@ int main()
     printMatrix(B.rows, B.cols, B.data);
     printf("Maitrce C\n\n");
     printMatrix(C.rows, C.cols, C.data);
-
     
-
-    
-
     pthread_t tid[T];
 
     // ################# MOLTIPLICO AxB #################
