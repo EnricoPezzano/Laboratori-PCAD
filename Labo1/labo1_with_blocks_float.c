@@ -178,7 +178,8 @@ int main()
         // nel prossimo ciclo a k* verrà assengato il valore di i incrementato
     }
 
-    pthread_barrier_wait(&barrier);
+    if(pthread_barrier_wait(&barrier) == -1)
+        fprintf(sterr, "pthread_barrier_wait error :(");    
 
     for(int i=0; i<T; i++)
         pthread_join(tid[i], NULL);
