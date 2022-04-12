@@ -3,7 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <time.h>
-#include </Users/enrico/pthread-barrier-macos-master/source/pthread_barrier.c> // COMMENT IF NOT MACOS :)
+// #include </Users/enrico/pthread-barrier-macos-master/source/pthread_barrier.c> // COMMENT IF NOT MACOS :)
 
 pthread_barrier_t barrier; // identificatore "pthread_barrier_t" non definito
 int M,N,P; // Numero righe e colonne delle matrici 
@@ -57,7 +57,7 @@ void printMatrix(int row, int column, float** matrix){ // stampa la matrice
 }
 
 void *mul(void *arg) {
-    printf("\nSono il thread: %d. Inizio la mia task.", pthread_self());
+    printf("\nSono il thread: %ld. Inizio la mia task.", pthread_self());
 
     int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
     free(arg); // libero k* (la zona di memoria puntata da k)
@@ -76,7 +76,7 @@ void *mul(void *arg) {
         }  
     }
 
-    printf("\nSono il thread: %d. Ho finito la prima moltiplicazione.", pthread_self());
+    printf("\nSono il thread: %ld. Ho finito la prima moltiplicazione.", pthread_self());
     printf("\n");
     pthread_barrier_wait(&barrier);
 
@@ -92,7 +92,7 @@ void *mul(void *arg) {
             moltiplicazione = 0; 
         }  
     }
-    printf("\nSono il thread: %d. Ho finito la seconda moltiplicazione.", pthread_self());
+    printf("\nSono il thread: %ld. Ho finito la seconda moltiplicazione.", pthread_self());
     printf("\n");
 }
 
