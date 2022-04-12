@@ -12,53 +12,45 @@ int T; // Numero di thread utilizzati
 typedef struct matrix { // Ogni matrice è una struct 
     int rows; // numero righe
     int cols; // num colonne
-    int **data; // array bidimensionale che contiene la matrice
+    float **data; // array bidimensionale che contiene la matrice
 }matrix;
 
 // A B e R sono matrici globali, in modo che possano essere viste anche dai thread
-struct matrix A;
-struct matrix B;
-struct matrix R; // Risultato AxB
-struct matrix C;
-struct matrix Q; // Risultato CxR
+ matrix A;
+ matrix B;
+ matrix R; // Risultato AxB
+ matrix C;
+ matrix Q; // Risultato CxR
 
-void float_filling(int row, int column, float** matrix){
+void float_filling(int row, int column, float** matrice){ // inserisce valori random da 0 a 9 nella matrice
     for(int i = 0; i < row; i++)
         for(int j = 0; j < column; j++) {
-            matrix[i][j] = rand()%10; // parte intera casuale
-            matrix[i][j] += (rand()%10)/10; // parte decimale casuale
+
+            matrice[i][j] = rand()%10; // parte intera casuale
+            matrice[i][j] += (float)(rand()%10)/10; // parte decimale casuale
         }
 }
 
-void ins (int row, int column, int** matrix){ // inserisce valori random da 0 a 9 nella matrice
-    for(int i = 0; i < row; i++) {
-        for(int j = 0; j < column; j++) {
-            matrix[i][j] = rand()%10;
-        }
-    }
-}
-
-int** createArray(int m, int n) { // crea l'array bidimensionale che conterrà la matrice
-    int* values = calloc(m*n, sizeof(int));
-    int** rows = malloc(m*sizeof(int*));
-    for (int i=0; i<m; ++i) {
+float** createArray(int m, int n) { // crea l'array bidimensionale che conterrà la matrice
+    float* values = calloc(m*n, sizeof(float));
+    float** rows = malloc(m*sizeof(float*));
+    for (int i=0; i<m; ++i)
         rows[i] = values + i*n;
-    }
+
     return rows;
 }
 
-void destroyArray(int** arr) { // elimina la matrice, libera la memoria 
+void destroyArray(float** arr) { // elimina la matrice, libera la memoria 
     free(*arr);
     free(arr);
 }
 
-
-void printMatrix(int row, int column, int** matrix){ // stampa la matrice
+void printMatrix(int row, int column, float** matrix){ // stampa la matrice
     for(int i = 0; i < row; i++) {
         printf("|   ");
-        for(int j = 0; j < column; j++) {
-            printf("%d   ", matrix[i][j]);
-        }
+        for(int j = 0; j < column; j++)
+            printf("%f   ", matrix[i][j]);
+
         printf("|\n");
     }
     printf("\n\n");
@@ -69,7 +61,7 @@ void *mul(void *arg) {
 
     int indexRow = *((int *)arg); // ho passato *k al thread e l'ho salvato in indexRow
     free(arg); // libero k* (la zona di memoria puntata da k)
-    int moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
+    float moltiplicazione = 0; // conterrà il valore di una cella della matrice R (risultato)
 
     // Moltiplico la riga indexRow di A per tutte le colonne di B
     for(int z=indexRow; z < indexRow+(M/T); z++) { 
@@ -80,11 +72,10 @@ void *mul(void *arg) {
             // avrò calcolato tutta la riga indexRow di R
 
             R.data[z][i] = moltiplicazione;
-            //printf("%d", R.data[z][i]);
             moltiplicazione = 0; 
         }  
     }
-    indexRow = 0;
+
     printf("\nSono il thread: %d. Ho finito la prima moltiplicazione.", pthread_self());
     printf("\n");
     pthread_barrier_wait(&barrier);
@@ -92,11 +83,10 @@ void *mul(void *arg) {
     // Moltiplico CxR
     for(int z=indexRow; z < indexRow+(P/T); z++) { 
         for(int i=0; i<R.cols; i++) { 
-            for(int j=0; j<R.rows; j++) {
+            for(int j=0; j<R.rows; j++) 
                 moltiplicazione += C.data[z][j]*R.data[j][i];
-            }
-            // salvo il risultato nella riga indexRow di R, al termine del ciclo 
-            // avrò calcolato tutta la riga indexRow di R
+                // salvo il risultato nella riga indexRow di R, al termine del ciclo 
+                // avrò calcolato tutta la riga indexRow di R
 
             Q.data[z][i] = moltiplicazione;
             moltiplicazione = 0; 
@@ -144,9 +134,9 @@ int main()
     Q.rows = P;
     Q.cols = P;
 
-    ins(A.rows, A.cols, A.data);
-    ins(B.rows, B.cols, B.data);
-    ins(C.rows, C.cols, C.data);
+    float_filling(A.rows, A.cols, A.data);
+    float_filling(B.rows, B.cols, B.data);
+    float_filling(C.rows, C.cols, C.data);
     printf("\nMatrice A \n\n");
     printMatrix(A.rows, A.cols, A.data);
     printf("Matrice B \n\n");
@@ -168,21 +158,17 @@ int main()
         // nel prossimo ciclo a k* verrà assengato il valore di i incrementato
     }
 
-    // for(int i=0, j=0; i < T*(P/T); i+=P/T, j++) {
-    //     int* k= malloc(sizeof(int)); 
-    //     *k=i; 
-    //     pthread_create(&tid[j], NULL, &mul2,  (void*) k); 
-    // }
-
-
-    for(int i=0; i<T; i++)
-        pthread_join(tid[i], NULL);
+    void* ret;
+    for(int i=0; i<T; i++){
+        pthread_join(tid[i], &ret);
+        printf("\nValore di ritorno della join: %zd",(size_t)(off_t)ret);
+    }
     pthread_barrier_destroy(&barrier);
 
     long after = clock();
     double time = (double)(after-before)/CLOCKS_PER_SEC;
 
-    printf("Matrice Q =  C*(A*B) \n\n");
+    printf("\n\nMatrice Q =  C*(A*B) \n\n");
     printMatrix(P,P,Q.data);
     printf("Tempo di calcolo C*(A*B): %lf\n\n", time);
     printf("\nNumero di Thread T utilizzati: %d\n", T);
