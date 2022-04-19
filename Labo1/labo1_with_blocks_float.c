@@ -3,7 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <time.h>
-// #include </Users/enrico/pthread-barrier-macos-master/source/pthread_barrier.c> // COMMENT IF NOT MACOS :)
+#include </Users/enrico/pthread-barrier-macos-master/source/pthread_barrier.c> // COMMENT IF NOT MACOS :)
 
 pthread_barrier_t barrier; // identificatore "pthread_barrier_t" non definito
 int M,N,P; // Numero righe e colonne delle matrici 
@@ -146,7 +146,7 @@ int main()
     
     pthread_t tid[T];
     
-    long before = clock();
+    clock_t before = clock();
     for(int i=0, j=0; i < T*(M/T); i+=M/T, j++) {
         int* k = malloc(sizeof(int)); 
         *k = i; 
@@ -165,7 +165,7 @@ int main()
     }
     pthread_barrier_destroy(&barrier);
 
-    long after = clock();
+    clock_t after = clock();
     double time = (double)(after-before)/CLOCKS_PER_SEC;
 
     printf("\n\nMatrice Q =  C*(A*B) \n\n");
