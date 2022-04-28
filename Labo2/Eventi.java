@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Eventi implements Callable{
-   private ConcurrentHashMap <K, V> cmap;
+   private ConcurrentHashMap <K, V> c  map;
    // ConcurrentHashMap<K, V> chm = new ConcurrentHashMap<>(Map m);
    // cmap = new ConcurrentHashMap<String,AtomicInteger>(NomeEvento, Posti);
    private String NomeEvento;
@@ -12,6 +12,7 @@ public class Eventi implements Callable{
    private AtomicInteger Posti;
 
    public Eventi(String nome, AtomicInteger posti){
+      Map m = new Map<String, Integer>();
       this.cmap = new ConcurrentHashMap<>(Map m);
       this.NomeEvento = nome;
       this.Posti = posti;
