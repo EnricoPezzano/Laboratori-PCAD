@@ -17,19 +17,19 @@ public class Crivello extends Thread {
 
   public void run() {
     
-    try{
+   try{
 
       Integer mynumber = queue.take();
       while(mynumber % myPrimeNumber == 0){
-        mynumber = queue.take();
+         mynumber = queue.take();
       }
-      
+   
       Crivello crivello = new Crivello(mynumber);
       crivello.start();
 
       while(mynumber != -1){
-        if(mynumber % myPrimeNumber != 0) crivello.push(mynumber);
-        mynumber = queue.take();
+         if(mynumber % myPrimeNumber != 0) crivello.push(mynumber);
+         mynumber = queue.take();
       }
 
       crivello.push(mynumber);
@@ -37,10 +37,11 @@ public class Crivello extends Thread {
 
       System.out.print(myPrimeNumber);
       System.out.print(" - ");
-    }catch(InterruptedException e){
+   }
+   catch(InterruptedException e){
       System.out.println("\n\n");
       return;
-    }
+   }
 
   }  
 }
