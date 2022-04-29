@@ -1,21 +1,19 @@
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Callable;
+import java.lang.*;
 
 public class Eventi implements Callable{
-   private ConcurrentHashMap <K, V> c  map;
-   // ConcurrentHashMap<K, V> chm = new ConcurrentHashMap<>(Map m);
-   // cmap = new ConcurrentHashMap<String,AtomicInteger>(NomeEvento, Posti);
-   private String NomeEvento;
-   // private AtomicInteger Posti;
-   private AtomicInteger Posti;
+   
+   private HashMap ListaEventi = new HashMap<String, Integer>();
+   // private String NomeEvento;
+   // private Integer PostiDisponibili;
+   // private Integer PostiMax;
 
-   public Eventi(String nome, AtomicInteger posti){
-      Map m = new Map<String, Integer>();
-      this.cmap = new ConcurrentHashMap<>(Map m);
-      this.NomeEvento = nome;
-      this.Posti = posti;
+   public Eventi(String nome, Integer posti){
+      // synchronized(this){
+      //    // this.NomeEvento = nome;
+      //    // this.PostiMax = this.PostiDisponibili = posti;
+      // }
    }
 
    public Integer call(){
@@ -24,15 +22,23 @@ public class Eventi implements Callable{
       return 0;
    }
 
-   public void Crea(String NomeEvento, int Posti){
-      
+   public synchronized void Crea(String NomeEvento, Integer Posti){
+      if(ListaEventi.putIfAbsent(NomeEvento, Posti) == null)
+         throw new IllegalArgumentException();
    }
 
-   public void Aggiungi(String NomeEvento, int Posti){
-      
+   public synchronized void Aggiungi(String NomeEvento, Integer postiDaAggiungere){
+      Integer oldValue = (Integer)ListaEventi.get(NomeEvento);
+      Integer newValue = sum(ListaEventi.get(NomeEvento), postiDaAggiungere);
+
+      ListaEventi.replace(NomeEvento, oldValue, newValue);
    }
 
-   public void Prenota(String NomeEvento, int Posti){
+   private Integer sum(Object object, Integer postiDaAggiungere) {
+      return (Integer)ListaEventi.get(object) + postiDaAggiungere;
+   }
+
+   public void Prenota(String NomeEvento, Integer Posti){
       
    }
 
@@ -40,7 +46,7 @@ public class Eventi implements Callable{
       
    }
 
-   public void Chiudi(String NomeEvento){
+   public synchronized void Chiudi(String NomeEvento){
       
    }
 }
