@@ -1,52 +1,89 @@
-import java.util.HashMap;
-import java.util.concurrent.Callable;
-import java.lang.*;
+import java.util.ArrayList;
+// import java.util.concurrent;
 
-public class Eventi implements Callable{
-   
-   private HashMap ListaEventi = new HashMap<String, Integer>();
-   // private String NomeEvento;
-   // private Integer PostiDisponibili;
-   // private Integer PostiMax;
+public class Eventi implements Runnable{
 
-   public Eventi(String nome, Integer posti){
-      // synchronized(this){
-      //    // this.NomeEvento = nome;
-      //    // this.PostiMax = this.PostiDisponibili = posti;
-      // }
-   }
+   private ArrayList<Evento> ListaEventi;
 
-   public Integer call(){
+   public class Evento{
+      private final String NomeEvento;
+      private int PostiOccupati;
+      private int PostiMax;
+      private boolean isDone;
 
+      public Evento(String nome, int posti){
+         this.NomeEvento = nome;
+         this.PostiMax = posti;
+      }
 
-      return 0;
-   }
+      public String getNome(){ return this.NomeEvento; }
 
-   public synchronized void Crea(String NomeEvento, Integer Posti){
-      if(ListaEventi.putIfAbsent(NomeEvento, Posti) == null)
-         throw new IllegalArgumentException();
-   }
+      public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
-   public synchronized void Aggiungi(String NomeEvento, Integer postiDaAggiungere){
-      Integer oldValue = (Integer)ListaEventi.get(NomeEvento);
-      Integer newValue = sum(ListaEventi.get(NomeEvento), postiDaAggiungere);
+      public void addPeople(int postiDaPrenotare) throws InterruptedException {
+         while(postiDaPrenotare <= getDisponibili() && !isDone)
+            this.wait(); // ??
 
-      ListaEventi.replace(NomeEvento, oldValue, newValue);
-   }
+         if(isDone)
+            error("Evento terminato :(");
 
-   private Integer sum(Object object, Integer postiDaAggiungere) {
-      return (Integer)ListaEventi.get(object) + postiDaAggiungere;
-   }
+         this.PostiOccupati += postiDaPrenotare;
+      }
 
-   public void Prenota(String NomeEvento, Integer Posti){
       
+
+   } // end class Evento
+
+   public void run(){
+      // 
+   }
+
+   public void error(String message){
+      System.err.println(message);
+      System.exit(-1);
+   }
+
+   public synchronized void Crea(String NomeEvento, int PostiTot){
+      for(Evento e : ListaEventi)
+         if(e.getNome().equals(NomeEvento)) // se c'è già...
+            error("L'evento "+NomeEvento+" esiste già.");
+
+      ListaEventi.add(new Evento(NomeEvento, PostiTot));
+   }
+
+   public synchronized void Aggiungi(String NomeEvento, int postiDaAggiungere){
+      for(Evento e : ListaEventi)
+         if(e.getNome().equals(NomeEvento)){
+            if(e.PostiMax <= 0)
+               throw new IllegalStateException();
+
+            e.PostiMax += postiDaAggiungere;
+         }
+      error("L'evento digitato non esiste.");
+   }
+
+   public void Prenota(String NomeEvento, int postiDaPrenotare) throws InterruptedException{
+      for(Evento e : ListaEventi)
+         if(e.getNome().equals(NomeEvento)){
+            e.addPeople(postiDaPrenotare);
+            break;
+         }
+   
+      error("L'evento digitato non esiste.");
    }
 
    public void ListaEventi(){
-      
+      for(Evento e : ListaEventi)
+         System.out.println("Evento: "+e.getNome()+"\t Posti disponibili: "+e.getDisponibili());
    }
 
    public synchronized void Chiudi(String NomeEvento){
-      
+      for(Evento e : ListaEventi)
+         if(e.getNome().equals(NomeEvento)){
+            ListaEventi.remove(e);
+            break;
+         }
+
+      error("L'evento digitato non esiste.");
    }
 }
