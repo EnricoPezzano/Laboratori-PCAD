@@ -30,8 +30,6 @@ public class Eventi implements Runnable{
          this.PostiOccupati += postiDaPrenotare;
       }
 
-      
-
    } // end class Evento
 
    public void run(){
