@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class Test extends Thread{
    public final static int numEventi = 5;
    public final static String[] data = { "poolParty", "christamnParty", "pasquaParty", "compleanno", "barmitzvah" };
@@ -7,46 +5,18 @@ public class Test extends Thread{
 
    public static void main(String[] args) throws InterruptedException
    {
-      Thread admin = new Thread(new Runnable(){
-			public void run() {
-            while(true) {
-               System.out.println("\nInizio Admin.");
-               eventi.ListaEventi();
-               
-               for(int i = 0 ; i<numEventi; i++) {
-                  try {      
-                     eventi.Crea(data[i], 1+i*47);
-                     Thread.sleep(1000);
-                     
-                     eventi.Aggiungi(data[i], i+7);
-                     Thread.sleep(1000);
-                     
-                  }
-                  catch (InterruptedException e) {
-                     e.printStackTrace();
-                  }
-               }
-               
-               eventi.ListaEventi();
-      
-               //chiusura evento random
-               var r = new Random();
-               int randEvent = r.nextInt(numEventi);
-               eventi.Chiudi(data[randEvent]);
-               System.out.println("\nFine Admin.");
-               eventi.ListaEventi();
-            }
-			}
-		});
+      Admin admin = new Admin();
+      Utente utente = new Utente();
 
-      Thread utente1 = new Thread();
-      Thread utente2 = new Thread();
+      Thread admin1 = new Thread(admin);
+      Thread utente1 = new Thread(utente);
+      Thread utente2 = new Thread(utente);
 
-      admin.start();
+      admin1.start();
       utente1.start();
       utente2.start();
 
-      admin.join();
+      admin1.join();
       utente1.join();
       utente2.join();
    }

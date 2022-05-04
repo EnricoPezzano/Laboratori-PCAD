@@ -1,7 +1,6 @@
 import java.util.ArrayList;
-import java.util.Random;
 
-public class Eventi implements Runnable{
+public class Eventi{
 
    public ArrayList<Evento> ListaEventi = new ArrayList<Evento>();
 
@@ -41,23 +40,6 @@ public class Eventi implements Runnable{
       }
 
    } // end class Evento
-
-   public void run(){
-      System.out.println("\nInizio utente.");
-      while(true){ // thread utenti 1 e 2
-         try {
-            var r = new Random();
-            int randEvent = r.nextInt(Test.numEventi);
-            this.Prenota(Test.data[randEvent], randEvent*21);
-            System.out.println("\nEvento "+Test.data[randEvent]+" prenotato.");
-            System.out.println("\nFine utente.");
-            this.ListaEventi();
-         }
-         catch (InterruptedException e) {
-            e.printStackTrace();
-         }
-      }
-   }
 
    public void error(String message){
       System.err.println(message);
