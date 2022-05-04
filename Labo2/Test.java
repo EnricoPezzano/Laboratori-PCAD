@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Test extends Thread{
    public final static int numEventi = 5;
-   public final static String[] data = { "poolParty", "christamnParty", "pasqua", "compleanno", "barmitzvah" };
+   public final static String[] data = { "poolParty", "christamnParty", "pasquaParty", "compleanno", "barmitzvah" };
    public static Eventi eventi = new Eventi();
 
    public static void main(String[] args) throws InterruptedException

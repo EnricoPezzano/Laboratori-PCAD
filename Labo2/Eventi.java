@@ -80,6 +80,7 @@ public class Eventi implements Runnable{
                throw new IllegalStateException();
 
             e.PostiMax += postiDaAggiungere;
+            return;
          }
       error("L'evento "+NomeEvento+" non esiste.");
    }
@@ -91,7 +92,7 @@ public class Eventi implements Runnable{
             break;
          }
    
-      error("L'evento digitato non esiste.");
+      error("L'evento "+NomeEvento+" non esiste.");
    }
 
    public void ListaEventi(){
@@ -106,7 +107,7 @@ public class Eventi implements Runnable{
             e.isDone = true;
             System.out.println("\nEvento "+NomeEvento+" chiuso.");
             notifyAll();
-            break;
+            return;
          }
 
       error("L'evento digitato non esiste.");
