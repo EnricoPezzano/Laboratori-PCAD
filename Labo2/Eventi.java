@@ -1,9 +1,9 @@
 import java.util.ArrayList;
-// import java.util.concurrent;
+import java.util.Random;
 
 public class Eventi implements Runnable{
 
-   private ArrayList<Evento> ListaEventi;
+   public ArrayList<Evento> ListaEventi;
 
    public class Evento{
       private final String NomeEvento;
@@ -21,19 +21,39 @@ public class Eventi implements Runnable{
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
       public void addPeople(int postiDaPrenotare) throws InterruptedException {
-         while(postiDaPrenotare <= getDisponibili() && !isDone)
-            this.wait(); // ??
+         while(postiDaPrenotare >= getDisponibili() && !isDone){
+            try{
+               this.wait();
 
-         if(isDone)
-            error("Evento terminato :(");
+               if(postiDaPrenotare <= getDisponibili() && !isDone)
+                  notifyAll();
 
-         this.PostiOccupati += postiDaPrenotare;
+               if(isDone)
+                  error("Evento terminato :(");
+
+               this.PostiOccupati += postiDaPrenotare;
+            }
+            catch(InterruptedException e){
+               return;
+            }
+         }
       }
 
    } // end class Evento
 
    public void run(){
-      // 
+      while(true){ // thread utenti 1 e 2
+         try {
+            var r = new Random();
+            int randEvent = r.nextInt(Test.numEventi);
+            this.Prenota(Test.data[randEvent], randEvent*21);
+            System.out.println("\nFine.");
+            this.ListaEventi();
+         }
+         catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+      }
    }
 
    public void error(String message){
@@ -76,6 +96,9 @@ public class Eventi implements Runnable{
    }
 
    public synchronized void Chiudi(String NomeEvento){
+
+      // manca "sblocca tutti i clienti in attesa di posti"
+
       for(Evento e : ListaEventi)
          if(e.getNome().equals(NomeEvento)){
             ListaEventi.remove(e);
