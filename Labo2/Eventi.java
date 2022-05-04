@@ -14,6 +14,7 @@ public class Eventi implements Runnable{
       public Evento(String nome, int posti){
          this.NomeEvento = nome;
          this.PostiMax = posti;
+         this.isDone = false;
       }
 
       public String getNome(){ return this.NomeEvento; }
@@ -21,11 +22,11 @@ public class Eventi implements Runnable{
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
       public void addPeople(int postiDaPrenotare) throws InterruptedException {
-         while(postiDaPrenotare >= getDisponibili() && !isDone){
+         while(postiDaPrenotare >= getDisponibili() && !this.isDone){
             try{
                this.wait();
 
-               if(postiDaPrenotare <= getDisponibili() && !isDone)
+               if(postiDaPrenotare <= getDisponibili() && !this.isDone)
                   notifyAll();
 
                if(isDone)
@@ -96,12 +97,11 @@ public class Eventi implements Runnable{
    }
 
    public synchronized void Chiudi(String NomeEvento){
-
-      // manca "sblocca tutti i clienti in attesa di posti"
-
       for(Evento e : ListaEventi)
          if(e.getNome().equals(NomeEvento)){
             ListaEventi.remove(e);
+            e.isDone = true;
+            notifyAll();
             break;
          }
 
