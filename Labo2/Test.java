@@ -10,15 +10,15 @@ public class Test extends Thread{
       Thread admin = new Thread(new Runnable(){
 			public void run() {
             while(true) {
-               System.out.println("\nInizio.");
+               System.out.println("\nInizio Admin.");
                eventi.ListaEventi();
                
                for(int i = 0 ; i<numEventi; i++) {
                   try {      
-                     eventi.Crea(data[i], i*47);
+                     eventi.Crea(data[i], 1+i*47);
                      Thread.sleep(1000);
                      
-                     eventi.Aggiungi(data[i], i*32);
+                     eventi.Aggiungi(data[i], i+7);
                      Thread.sleep(1000);
                      
                   }
@@ -33,7 +33,7 @@ public class Test extends Thread{
                var r = new Random();
                int randEvent = r.nextInt(numEventi);
                eventi.Chiudi(data[randEvent]);
-               System.out.println("\nFine.");
+               System.out.println("\nFine Admin.");
                eventi.ListaEventi();
             }
 			}

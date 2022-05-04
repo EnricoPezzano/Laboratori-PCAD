@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Eventi implements Runnable{
 
-   public ArrayList<Evento> ListaEventi;
+   public ArrayList<Evento> ListaEventi = new ArrayList<Evento>();
 
    public class Evento{
       private final String NomeEvento;
@@ -43,12 +43,14 @@ public class Eventi implements Runnable{
    } // end class Evento
 
    public void run(){
+      System.out.println("\nInizio utente.");
       while(true){ // thread utenti 1 e 2
          try {
             var r = new Random();
             int randEvent = r.nextInt(Test.numEventi);
             this.Prenota(Test.data[randEvent], randEvent*21);
-            System.out.println("\nFine.");
+            System.out.println("\nEvento "+Test.data[randEvent]+" prenotato.");
+            System.out.println("\nFine utente.");
             this.ListaEventi();
          }
          catch (InterruptedException e) {
@@ -68,6 +70,7 @@ public class Eventi implements Runnable{
             error("L'evento "+NomeEvento+" esiste già.");
 
       ListaEventi.add(new Evento(NomeEvento, PostiTot));
+      System.out.println("\nEvento "+NomeEvento+" creato.");
    }
 
    public synchronized void Aggiungi(String NomeEvento, int postiDaAggiungere){
@@ -78,7 +81,7 @@ public class Eventi implements Runnable{
 
             e.PostiMax += postiDaAggiungere;
          }
-      error("L'evento digitato non esiste.");
+      error("L'evento "+NomeEvento+" non esiste.");
    }
 
    public void Prenota(String NomeEvento, int postiDaPrenotare) throws InterruptedException{
@@ -101,6 +104,7 @@ public class Eventi implements Runnable{
          if(e.getNome().equals(NomeEvento)){
             ListaEventi.remove(e);
             e.isDone = true;
+            System.out.println("\nEvento "+NomeEvento+" chiuso.");
             notifyAll();
             break;
          }
