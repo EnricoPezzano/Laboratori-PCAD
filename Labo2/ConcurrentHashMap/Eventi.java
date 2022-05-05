@@ -23,7 +23,7 @@ public class Eventi{
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
       public synchronized Evento addPeople(int postiDaAggiungere) throws InterruptedException {
-         while(postiDaAggiungere > getDisponibili() && ListaEventi.containsKey(NomeEvento)){
+         while(postiDaAggiungere <= getDisponibili() && ListaEventi.containsKey(NomeEvento)){
             try{
                System.out.println("\naddPeople: sto aspettando.");
                wait();
