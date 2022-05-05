@@ -2,6 +2,8 @@ package ConcurrentHashMap;
 
 import java.util.Random;
 
+// Un thread ADMIN esegue la sequenza Crea, pausa, Aggiungi, pausa, Chiudi per diversi nomi di eventi.
+
 public class Admin implements Runnable{
    public void run() {
       while(true) {
@@ -24,14 +26,7 @@ public class Admin implements Runnable{
          
          
          Test.eventi.ListaEventi();
-         // this.notifyAll();
-
-         // try {
-         //    Test.eventi.wait();
-         // }
-         // catch (InterruptedException e){
-         //    e.printStackTrace();
-         // }
+         
          //chiusura evento random
          var r = new Random();
          int randEvent = r.nextInt(Test.numEventi);

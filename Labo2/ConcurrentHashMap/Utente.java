@@ -2,6 +2,8 @@ package ConcurrentHashMap;
 
 import java.util.Random;
 
+// Un thread di tipo UTENTE invia richieste di prenotazione
+
 public class Utente implements Runnable{
    public void run(){
       System.out.println("\nInizio utente.");
