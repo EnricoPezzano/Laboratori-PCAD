@@ -22,42 +22,30 @@ public class Eventi{
 
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
-      public synchronized Evento addPeople(int postiDaAggiungere) throws InterruptedException {
-         while(postiDaAggiungere <= getDisponibili() && ListaEventi.containsKey(NomeEvento)){
-            try{
-               System.out.println("\naddPeople: sto aspettando.");
-               wait();
-            }
-            catch(InterruptedException e){
-               return null;
-            }
-         }
-
-         System.out.println("\naddPeople: non sto più aspettando.");
-
-         if(postiDaAggiungere <= getDisponibili() && ListaEventi.containsKey(NomeEvento))
-            notifyAll();
-
+      public synchronized Evento addSeats(int postiDaAggiungere) throws InterruptedException {
          if(!ListaEventi.containsKey(NomeEvento))
-            error("error: Evento terminato.");
+            error("error: Evento terminato o inesistente.");
+
+            System.out.println("\npippoaddSeats");
 
          this.PostiOccupati += postiDaAggiungere;
+         System.out.println("\naddSeats: aggiunti "+postiDaAggiungere+" posti. Notifico...");
+         notifyAll();
 
          return this;
       }
 
-      public synchronized Evento bookPeople(int postiDaPrenotare) throws InterruptedException {
-         while(postiDaPrenotare >= getDisponibili() && ListaEventi.containsKey(NomeEvento)){
+      public synchronized Evento bookSeats(int postiDaPrenotare) throws InterruptedException {
+         while(postiDaPrenotare > getDisponibili() && ListaEventi.containsKey(NomeEvento)){
             try{
-               System.out.println("\nbookPeople: sto aspettando.");
+               System.out.println("\nbookSeats: sto aspettando.");
                wait();
             }
             catch(InterruptedException e){
                return null;
             }
          }
-
-         System.out.println("\nbookPeople: non sto più aspettando.");
+         System.out.println("\nbookSeats: non sto più aspettando.");
 
          if(postiDaPrenotare <= getDisponibili() && ListaEventi.containsKey(NomeEvento))
             notifyAll();
@@ -66,6 +54,7 @@ public class Eventi{
             error("error: Evento terminato.");
 
          this.PostiOccupati += postiDaPrenotare;
+         System.out.println("\nEvento "+ListaEventi.get(NomeEvento).NomeEvento+" prenotato per "+postiDaPrenotare+" persone.");
 
          return this;
       }
@@ -77,7 +66,7 @@ public class Eventi{
       System.exit(-1);
    }
 
-   public synchronized void Crea(String NomeEvento, int PostiTot){
+   public void Crea(String NomeEvento, int PostiTot){
       Evento e = new Evento(NomeEvento, PostiTot);
       
       if(ListaEventi.containsKey(NomeEvento))
@@ -97,7 +86,7 @@ public class Eventi{
       
       ListaEventi.compute(NomeEvento, (key, val) -> {
          try {
-            return val.addPeople(postiDaAggiungere);
+            return val.addSeats(postiDaAggiungere);
          }
          catch (InterruptedException e) {
             e.printStackTrace();
@@ -116,7 +105,7 @@ public class Eventi{
       
       ListaEventi.compute(NomeEvento, (key, val) -> {
          try {
-            return val.addPeople(postiDaPrenotare);
+            return val.bookSeats(postiDaPrenotare);
          }
          catch (InterruptedException e) {
             e.printStackTrace();
@@ -130,7 +119,7 @@ public class Eventi{
    //       System.out.println("Evento: "+entry.getKey()+"\t Posti disponibili: "+entry.getValue());
    //   });
 
-      System.out.println("\n");
+      // System.out.println("\n");
       for (String key: ListaEventi.keySet()) {
          // String key = s.toString();
          int value = ListaEventi.get(key).getDisponibili();

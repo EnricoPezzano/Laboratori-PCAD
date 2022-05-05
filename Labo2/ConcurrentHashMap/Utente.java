@@ -7,20 +7,18 @@ import java.util.Random;
 public class Utente implements Runnable{
    public void run(){
       System.out.println("Inizio utente.");
-      // while(true){ // thread utenti 1 e 2
-         try {
-            Thread.sleep(1000);
-         }
-         catch (InterruptedException e) {
-            e.printStackTrace();
-         }
-         var r = new Random();
-         int randEvent = r.nextInt(Test.numEventi);
+      try {
+         Thread.sleep(1000); // aspetta la creazione degli eventi
+      }
+      catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+      var r = new Random();
+      int randEvent = r.nextInt(Test.numEventi);
 
-         Test.eventi.Prenota(Test.data[randEvent], 1+randEvent*21);
-         System.out.println("\nEvento "+Test.data[randEvent]+" prenotato. Posti prenotati: "+1+randEvent*3);
+      for(int i = 0 ; i<Test.numEventi; i++)
+         Test.eventi.Prenota(Test.data[i], 1+randEvent*4);
 
-         System.out.println("Fine utente.");
-      // } // while(1)
+      System.out.println("Fine utente.");
    }
 }
