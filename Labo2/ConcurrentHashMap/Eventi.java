@@ -10,12 +10,12 @@ public class Eventi{
       private final String NomeEvento;
       private int PostiOccupati;
       private int PostiMax;
-      private boolean isDone;
+      // private boolean isDone;
 
       public Evento(String nome, int posti){
          this.NomeEvento = nome;
          this.PostiMax = posti;
-         this.isDone = false;
+         // this.isDone = false;
       }
 
       public String getNome(){ return this.NomeEvento; }
@@ -23,42 +23,50 @@ public class Eventi{
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
       public synchronized Evento addPeople(int postiDaAggiungere) throws InterruptedException {
-         while(postiDaAggiungere >= getDisponibili() && !this.isDone){
+         while(postiDaAggiungere > getDisponibili() && ListaEventi.containsKey(NomeEvento)){
             try{
+               System.out.println("\naddPeople: sto aspettando.");
                wait();
-
-               if(postiDaAggiungere <= getDisponibili() && !this.isDone)
-                  notifyAll();
-
-               if(isDone)
-                  error("error: Evento terminato.");
-
-               this.PostiOccupati += postiDaAggiungere;
             }
             catch(InterruptedException e){
                return null;
             }
          }
+
+         System.out.println("\naddPeople: non sto più aspettando.");
+
+         if(postiDaAggiungere <= getDisponibili() && ListaEventi.containsKey(NomeEvento))
+            notifyAll();
+
+         if(!ListaEventi.containsKey(NomeEvento))
+            error("error: Evento terminato.");
+
+         this.PostiOccupati += postiDaAggiungere;
+
          return this;
       }
 
       public synchronized Evento bookPeople(int postiDaPrenotare) throws InterruptedException {
-         while(postiDaPrenotare >= getDisponibili() && !this.isDone){
+         while(postiDaPrenotare >= getDisponibili() && ListaEventi.containsKey(NomeEvento)){
             try{
+               System.out.println("\nbookPeople: sto aspettando.");
                wait();
-
-               if(postiDaPrenotare <= getDisponibili() && !this.isDone)
-                  notifyAll();
-
-               if(isDone)
-                  error("error: Evento terminato.");
-
-               this.PostiOccupati += postiDaPrenotare;
             }
             catch(InterruptedException e){
                return null;
             }
          }
+
+         System.out.println("\nbookPeople: non sto più aspettando.");
+
+         if(postiDaPrenotare <= getDisponibili() && ListaEventi.containsKey(NomeEvento))
+            notifyAll();
+
+         if(!ListaEventi.containsKey(NomeEvento))
+            error("error: Evento terminato.");
+
+         this.PostiOccupati += postiDaPrenotare;
+
          return this;
       }
 
@@ -77,7 +85,7 @@ public class Eventi{
 
       ListaEventi.put(NomeEvento, e);
 
-      System.out.println("\nEvento "+NomeEvento+" creato.");
+      System.out.println("Evento "+NomeEvento+" creato.");
    }
 
    public synchronized void Aggiungi(String NomeEvento, int postiDaAggiungere){
@@ -121,6 +129,8 @@ public class Eventi{
    //    ListaEventi.entrySet().forEach(entry -> {
    //       System.out.println("Evento: "+entry.getKey()+"\t Posti disponibili: "+entry.getValue());
    //   });
+
+      System.out.println("\n");
       for (String key: ListaEventi.keySet()) {
          // String key = s.toString();
          int value = ListaEventi.get(key).getDisponibili();
@@ -133,5 +143,6 @@ public class Eventi{
          error("Chiudi: L'evento "+NomeEvento+" non esiste.");
 
       ListaEventi.remove(NomeEvento);
+      System.out.println("\nChiudi: evento "+NomeEvento+" chiuso.");
    }
 }

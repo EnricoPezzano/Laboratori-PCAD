@@ -14,6 +14,8 @@ public class Test extends Thread{
       Thread utente1 = new Thread(utente);
       Thread utente2 = new Thread(utente);
 
+      System.out.println("\n");
+      
       admin1.start();
       utente1.start();
       utente2.start();
