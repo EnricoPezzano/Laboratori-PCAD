@@ -1,3 +1,5 @@
+package ArrayList;
+
 import java.util.Random;
 
 public class Utente implements Runnable{

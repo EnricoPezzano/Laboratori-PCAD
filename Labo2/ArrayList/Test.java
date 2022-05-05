@@ -1,3 +1,5 @@
+package ArrayList;
+
 public class Test extends Thread{
    public final static int numEventi = 5;
    public final static String[] data = { "poolParty", "christamnParty", "pasquaParty", "compleanno", "barmitzvah" };

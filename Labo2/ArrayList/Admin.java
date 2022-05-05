@@ -1,3 +1,5 @@
+package ArrayList;
+
 import java.util.Random;
 
 public class Admin implements Runnable{
@@ -5,20 +7,22 @@ public class Admin implements Runnable{
       while(true) {
          System.out.println("\nInizio Admin.");
          Test.eventi.ListaEventi();
+
+         for(int i = 0 ; i<Test.numEventi; i++)
+            Test.eventi.Crea(Test.data[i], 1+i*47);
          
-         for(int i = 0 ; i<Test.numEventi; i++) {
-            try {      
-               Test.eventi.Crea(Test.data[i], 1+i*47);
-               Thread.sleep(1000);
-               
-               Test.eventi.Aggiungi(Test.data[i], i+7);
-               Thread.sleep(1000);
-               
+        
+            try {
+               for(int i = 0 ; i<Test.numEventi; i++) {
+                  // Test.eventi.Crea(Test.data[i], 1+i*47);
+                  Test.eventi.Aggiungi(Test.data[i], i+7);
+                  Thread.sleep(1000);
+               }
             }
             catch (InterruptedException e) {
                e.printStackTrace();
             }
-         }
+         
          
          Test.eventi.ListaEventi();
          notifyAll();

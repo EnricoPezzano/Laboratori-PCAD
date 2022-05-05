@@ -1,3 +1,5 @@
+package ArrayList;
+
 import java.util.ArrayList;
 
 public class Eventi{
@@ -29,7 +31,7 @@ public class Eventi{
                   notifyAll();
 
                if(isDone)
-                  error("Evento terminato :(");
+                  error("error: Evento terminato.");
 
                this.PostiOccupati += postiDaPrenotare;
             }
@@ -64,7 +66,7 @@ public class Eventi{
             e.PostiMax += postiDaAggiungere;
             return;
          }
-      error("L'evento "+NomeEvento+" non esiste.");
+      error("Aggiungi: L'evento "+NomeEvento+" non esiste.");
    }
 
    public void Prenota(String NomeEvento, int postiDaPrenotare) throws InterruptedException{
@@ -74,7 +76,7 @@ public class Eventi{
             break;
          }
    
-      error("L'evento "+NomeEvento+" non esiste.");
+      error("Prenota: L'evento "+NomeEvento+" non esiste.");
    }
 
    public void ListaEventi(){
@@ -92,6 +94,6 @@ public class Eventi{
             return;
          }
 
-      error("L'evento digitato non esiste.");
+      error("Chiudi: L'evento digitato non esiste.");
    }
 }
