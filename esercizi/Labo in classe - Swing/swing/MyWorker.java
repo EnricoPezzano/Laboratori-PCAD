@@ -1,9 +1,6 @@
-import javax.swing.*;
 import java.util.List;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 public class MyWorker extends SwingWorker<String, Integer> {
 
