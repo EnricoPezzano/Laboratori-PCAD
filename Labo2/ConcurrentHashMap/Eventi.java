@@ -23,10 +23,9 @@ public class Eventi{
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
       public synchronized Evento addSeats(int postiDaAggiungere) throws InterruptedException {
+         System.out.println("\nsono qui...");
          if(!ListaEventi.containsKey(NomeEvento))
             error("error: Evento terminato o inesistente.");
-
-            System.out.println("\npippoaddSeats");
 
          this.PostiOccupati += postiDaAggiungere;
          System.out.println("\naddSeats: aggiunti "+postiDaAggiungere+" posti. Notifico...");
@@ -84,16 +83,15 @@ public class Eventi{
       if(!ListaEventi.containsKey(NomeEvento))
          error("Aggiungi: L'evento "+NomeEvento+" non esiste.");
       
+      System.out.println("\nsono qui...");
       ListaEventi.compute(NomeEvento, (key, val) -> {
          try {
-            return val.addSeats(postiDaAggiungere);
-         }
-         catch (InterruptedException e) {
+            return ListaEventi.get(NomeEvento).addSeats(postiDaAggiungere);
+         } catch (InterruptedException e) {
             e.printStackTrace();
          }
          return val;
       });
-         
    }
 
    public void Prenota(String NomeEvento, int postiDaPrenotare){

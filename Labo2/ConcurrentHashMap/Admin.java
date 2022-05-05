@@ -8,7 +8,7 @@ public class Admin implements Runnable{
 
       for(int i = 0 ; i<Test.numEventi; i++)
          Test.eventi.Crea(Test.data[i], 47+i*3);
-         
+
       System.out.println("\nAdmin: creati tutti gli eventi:");
       Test.eventi.ListaEventi();
 
@@ -19,10 +19,9 @@ public class Admin implements Runnable{
       }
       System.out.println("\nAdmin: svegliato dopo i 2 secondi.");
 
-      for(int i = 0 ; i<Test.numEventi; i++) {
-         Test.eventi.Aggiungi(Test.data[i], 1+i*7);
-         System.out.println("\nAdmin: aggiunti "+1+i*7+" posti.");
-      }
+      for(int i = 0 ; i<Test.numEventi; i++)
+         Test.eventi.Aggiungi(Test.data[i], 100);
+         
 
       try {
          Thread.sleep(2000);
@@ -38,7 +37,7 @@ public class Admin implements Runnable{
       var r = new Random();
       int randEvent = r.nextInt(Test.numEventi);
       Test.eventi.Chiudi(Test.data[randEvent]);
-      Test.eventi.Chiudi(Test.data[randEvent+1]);
+      Test.eventi.Chiudi(Test.data[3]);
 
       Test.eventi.ListaEventi();
       System.out.println("Fine Admin.");
