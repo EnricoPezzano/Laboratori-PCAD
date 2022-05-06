@@ -13,11 +13,11 @@ public class Admin implements Runnable{
       Test.eventi.ListaEventi();
 
       try {
-         Thread.sleep(2000);
+         Thread.sleep(3000);
       } catch (InterruptedException e1) {
          e1.printStackTrace();
       }
-      System.out.println("\nAdmin: svegliato dopo i 2 secondi.");
+      System.out.println("\nAdmin: svegliato dopo i 5 secondi.");
 
       for(int i = 0 ; i<Test.numEventi; i++)
          Test.eventi.Aggiungi(Test.data[i], 100);
@@ -33,7 +33,7 @@ public class Admin implements Runnable{
 
       Test.eventi.ListaEventi();
       
-      //chiudo 2 eventi randomicamente
+      //chiudo 2 eventi a caso
       var r = new Random();
       int randEvent = r.nextInt(Test.numEventi);
       Test.eventi.Chiudi(Test.data[randEvent]);
