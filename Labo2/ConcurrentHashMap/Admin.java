@@ -17,7 +17,7 @@ public class Admin implements Runnable{
       } catch (InterruptedException e1) {
          e1.printStackTrace();
       }
-      System.out.println("\nAdmin: svegliato dopo i 5 secondi.");
+      System.out.println("\nAdmin: svegliato dopo i 3 secondi.");
 
       for(int i = 0 ; i<Test.numEventi; i++)
          Test.eventi.Aggiungi(Test.data[i], 100);

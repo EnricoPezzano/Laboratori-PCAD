@@ -4,6 +4,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Eventi{
 
+   // Nella soluzione implementata nessuna operazione viene effettivamente gestita concorrentemente.
+   // Nonostante ci siano più thread, alla fine si alternano il lock sulla stessa struttura dati, rendendo il 
+   // programma complessivamente sequenziale.
+   // Una possibile soluzione al problema di sopra, sarebbe di implementare la classe AtomicInteger ed "isolare"
+   // la variabile dei posti occupati per evento.
+
    public ConcurrentHashMap<String, Evento> ListaEventi = new ConcurrentHashMap<String, Evento>();
 
    public class Evento{
@@ -22,32 +28,31 @@ public class Eventi{
 
       public int getDisponibili(){ return this.PostiMax-this.PostiOccupati; }
 
-      public synchronized Evento addSeats(int postiDaAggiungere) throws InterruptedException {
-         if(!ListaEventi.containsKey(NomeEvento))
+      public Evento addSeats(int postiDaAggiungere) throws InterruptedException {
+         synchronized(ListaEventi){
+            ListaEventi.notifyAll();
+            if(!ListaEventi.containsKey(NomeEvento))
             error("error: Evento terminato o inesistente.");
 
-         this.PostiOccupati += postiDaAggiungere;
-         System.out.println("\nsono qui...");
-         System.out.println("\naddSeats: aggiunti "+postiDaAggiungere+" posti. Notifico...");
-         System.out.println("\nsono qui...");
-         notifyAll();
+            this.PostiMax += postiDaAggiungere;
+            System.out.println("\naddSeats: aggiunti "+postiDaAggiungere+" posti in "+this.NomeEvento+". Notifico...");
+            
+         }
 
          return this;
       }
 
       public synchronized Evento bookSeats(int postiDaPrenotare) throws InterruptedException {
-         System.out.println("\npippo");
          while(postiDaPrenotare > getDisponibili() && ListaEventi.containsKey(NomeEvento)){
-            // System.out.println("\npippo");
             try{
-               System.out.println("\nbookSeats: sto aspettando.");
+               System.out.println("\nbookSeats: sto aspettando.("+Thread.currentThread().getName()+")");
                wait();
             }
             catch(InterruptedException e){
                return null;
             }
          }
-         System.out.println("\nbookSeats: non sto più aspettando.");
+         System.out.println("\nbookSeats: non sto più aspettando.("+Thread.currentThread().getName()+")");
 
          if(postiDaPrenotare <= getDisponibili() && ListaEventi.containsKey(NomeEvento))
             notifyAll();
@@ -57,7 +62,7 @@ public class Eventi{
 
          this.PostiOccupati += postiDaPrenotare;
          System.out.println("\nEvento "+ListaEventi.get(NomeEvento).NomeEvento+" prenotato per "+postiDaPrenotare+" persone.");
-
+         
          return this;
       }
 
@@ -96,7 +101,7 @@ public class Eventi{
       });
    }
 
-   public void Prenota(String NomeEvento, int postiDaPrenotare){
+   public synchronized void Prenota(String NomeEvento, int postiDaPrenotare){
       if(ListaEventi.get(NomeEvento).PostiMax <= 0)
          throw new IllegalStateException("postiMax <= 0");
 
@@ -115,11 +120,6 @@ public class Eventi{
    }
 
    public void ListaEventi(){
-   //    ListaEventi.entrySet().forEach(entry -> {
-   //       System.out.println("Evento: "+entry.getKey()+"\t Posti disponibili: "+entry.getValue());
-   //   });
-
-      // System.out.println("\n");
       for (String key: ListaEventi.keySet()) {
          // String key = s.toString();
          int value = ListaEventi.get(key).getDisponibili();
