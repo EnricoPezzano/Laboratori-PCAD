@@ -13,10 +13,10 @@ public class Utente implements Runnable{
       System.out.println("\nutente sveglio...("+Thread.currentThread().getName()+")");
 
       for(int i = 0 ; i<Test.numEventi; i++){
-         System.out.println("\nutente: provo a prenotare.");
+         System.out.println("\nutente: provo a prenotare '"+Test.data[i]+"'. ("+Thread.currentThread().getName()+")");
          Test.eventi.Prenota(Test.data[i], 60);
       }
 
-      System.out.println("Fine utente.");
+      System.out.println("Fine utente. ("+Thread.currentThread().getName()+")");
    }
 }
