@@ -46,3 +46,9 @@ Tempo di calcolo C*(A*B): 0.003020
 Numero thread utilizzati: 10
 Tempo di calcolo C*(A*B): 0.002403
 
+Numero thread utilizzati: 2
+Tempo di calcolo C*(A*B): 0.000633
+
+Numero thread utilizzati: 2
+Tempo di calcolo C*(A*B): 0.000662
+
