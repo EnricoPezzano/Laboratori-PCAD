@@ -20,7 +20,7 @@ public class Client {
 			Scanner sc = new Scanner(System.in);
 			String line = null;
 
-			while (!"exit".equalsIgnoreCase(line)) {
+			while (!"exit".equalsIgnoreCase(line)) { // uguale a equals(), ma non è case sensitive
 				line = sc.nextLine(); // reading from user
 
 				// sending the user input to server
