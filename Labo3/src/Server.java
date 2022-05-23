@@ -5,7 +5,7 @@ import java.net.*;
 public class Server {
 
 	private static class ClientHandler implements Runnable {
-		private final Socket clientSocket;
+	private final Socket clientSocket;
 
 		// Constructor
 		public ClientHandler(Socket socket)
@@ -20,8 +20,7 @@ public class Server {
 			try {
 					
 				// get the outputstream of client
-				out = new PrintWriter(
-					clientSocket.getOutputStream(), true);
+				out = new PrintWriter(clientSocket.getOutputStream(), true);
 
 				// get the inputstream of client
 				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
