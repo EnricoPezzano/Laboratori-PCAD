@@ -1,4 +1,4 @@
-package ConcurrentHashMap;
+package ConcurrentHashMap
 
 public class Test extends Thread{
    public final static int numEventi = 5;

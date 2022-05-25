@@ -1,26 +1,35 @@
+package GUI;
+
 import javax.swing.*;
 
 public class GUI extends JFrame {
 
    private static final long serialVersionUID = 1L;
-   JButton step;
-   JLabel  statusLabel;
-   int counter;
-    
-   // campi nome e posti
-   // tasto prenota
-
+   JButton prenota;
+   JLabel  nameLabel;
+   JLabel numLabel;
+   JTextField t;
+   JTextField seats;
 
    public GUI() {
       super("Swing");
-      counter=0;
-      step = new JButton("Step");
-      statusLabel = new JLabel("0");
+
+      nameLabel = new JLabel("Nome evento: ");
+      t = new JTextField(16);
+      numLabel = new JLabel("Posti da Prenotare: ");
+      seats = new JTextField(3);
+      prenota = new JButton("Prenota");
+
       MyListener step_handler  = new MyListener(this);
-      step.addActionListener(step_handler);
+      prenota.addActionListener(step_handler);
+
       JPanel Panel = new JPanel();
-      Panel.add(step);
-      Panel.add(statusLabel);
+      Panel.add(nameLabel);
+      Panel.add(t);
+      Panel.add(numLabel);
+      Panel.add(seats);
+      Panel.add(prenota);
+      
       getContentPane().add(Panel);
       setDefaultCloseOperation(EXIT_ON_CLOSE);
       setVisible(true);
