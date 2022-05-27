@@ -13,7 +13,7 @@ public class MyWorker extends SwingWorker<String, Integer> {
 
    @Override
    protected String doInBackground() throws Exception {
-      Thread.sleep(1000); 
+      Thread.sleep(500); 
       return "Done!";
    }
     

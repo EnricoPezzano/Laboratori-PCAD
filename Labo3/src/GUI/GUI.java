@@ -20,8 +20,8 @@ public class GUI extends JFrame {
       seats = new JTextField(3);
       prenota = new JButton("Prenota");
 
-      MyListener step_handler  = new MyListener(this);
-      prenota.addActionListener(step_handler);
+      MyListener button_handler  = new MyListener(this);
+      prenota.addActionListener(button_handler);
 
       JPanel Panel = new JPanel();
       Panel.add(nameLabel);
