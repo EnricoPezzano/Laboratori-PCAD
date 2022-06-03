@@ -1,6 +1,7 @@
+package client;
+
 import java.io.*;
 import java.net.*;
-import GUI.GUI;
 
 public class Client {
 	public static void main(String[] args)

@@ -1,4 +1,4 @@
-package GUI;
+package client;
 
 import java.net.Socket;
 import javax.swing.*;
@@ -9,11 +9,13 @@ public class GUI extends JFrame {
    JFrame frame;
    JButton buttonPrenota;
    JButton buttonStampa;
-   JLabel  nameLabel;
+   JLabel nameLabel;
    JLabel numLabel;
    JTextField nameTField;
    JTextField seatsTField;
    JTextArea textArea;
+   final boolean STAMPA = true;
+   final boolean PRENOTA = false;
 
    public GUI(Socket socket) {
       this.socket = socket;
@@ -27,12 +29,10 @@ public class GUI extends JFrame {
       seatsTField = new JTextField(3);
       buttonPrenota = new JButton("PRENOTA");
       buttonStampa = new JButton("Stampa eventi disponobili");
-
-      MyListener booking_handler = new MyListener(this, nameTField, seatsTField);
-      buttonPrenota.addActionListener(booking_handler);
-
-      MyListener print_handler  = new MyListener(this);
-      buttonStampa.addActionListener(print_handler);
+      textArea = new JTextArea();
+      
+      buttonPrenota.addActionListener(new MyListener(this, socket, nameTField, seatsTField, PRENOTA));
+      buttonStampa.addActionListener(new MyListener(this, socket, nameTField, seatsTField, STAMPA));
 
       textArea.setBounds(5, 210, 424, 203);
 
@@ -46,9 +46,9 @@ public class GUI extends JFrame {
       panel.add(textArea);
       
       getContentPane().add(panel);
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
-      setVisible(true);
-      pack();
+      frame.add(panel); 
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setVisible(true);
    }
 
    // public static void main(String[] args) {

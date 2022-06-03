@@ -7,38 +7,59 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import eventi.Eventi;
 
-public class TPServer implements Runnable{
+public class ThreadPoolServer {
    Eventi ev = new Eventi();
 
-   protected int          serverPort   = 8080;
+   protected int          serverPort   = 1234;
    protected ServerSocket serverSocket = null;
    protected boolean      isStopped    = false;
    protected Thread       runningThread= null;
-   protected ExecutorService threadPool =
-      Executors.newFixedThreadPool(10);
+   protected ExecutorService threadPool = Executors.newFixedThreadPool(10);
+   protected int port = 1234;
 
-   public TPServer(int port){
+   public ThreadPoolServer(int port, Eventi ev){
       this.serverPort = port;
+      this.ev = ev;
    }
 
-   public void run(){
-      synchronized(this){
-         this.runningThread = Thread.currentThread();
-      }
+   public void start(){
+      // synchronized(this){
+      //    this.runningThread = Thread.currentThread();
+      // }
+      ev.Crea("poolParty2", 20);
+      ev.Crea("natale2", 20);
+      ev.Crea("compleanno2", 20);
+
+      ev.Aggiungi("poolParty", 10);
+      ev.Aggiungi("compleanno", 10);
+      ev.Aggiungi("natale", 10);
+
+      try {
+			Thread.sleep(1000);
+			// serverSocket = new ServerSocket(this.port);
+		}
+      catch(InterruptedException e1){
+			e1.printStackTrace();
+		}
+
       openServerSocket();
-      while(! isStopped()){
+      System.out.println("Server attivato");
+		//attivo il server sulla porta 1234 in modo chge il client possa mettervisi in ascolto
+
+      while(!isStopped()){
          Socket clientSocket = null;
          try {
-               clientSocket = this.serverSocket.accept();
-         } catch (IOException e) {
-               if(isStopped()) {
-                  System.out.println("Server Stopped.") ;
-                  break;
-               }
-               throw new RuntimeException(
-                  "Error accepting client connection", e);
+            clientSocket = this.serverSocket.accept();
          }
-         this.threadPool.execute(new WorkerRunnable(clientSocket, "Thread Pooled Server"));
+         catch (IOException e) {
+            if(isStopped()) {
+               System.out.println("Server Stopped.") ;
+               break;
+            }
+            throw new RuntimeException(
+               "Error accepting client connection", e);
+         }
+         this.threadPool.execute(new WorkerRunnable(clientSocket, "Thread Pooled Server <3", ev));
       }
       this.threadPool.shutdown();
       System.out.println("Server Stopped.") ;
@@ -71,19 +92,5 @@ public class TPServer implements Runnable{
 
    public void ServerBooks(String eventoDaPrenotare, int postiDaPrenotare){
       ev.Prenota(eventoDaPrenotare, postiDaPrenotare);
-   }
-
-   public static void main(String[] args)
-   {
-      TPServer server = new TPServer(9000);
-      new Thread(server).start();
-
-      try {
-         Thread.sleep(20 * 1000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
-      System.out.println("Stopping Server");
-      server.stop();
    }
 }
