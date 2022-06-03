@@ -1,47 +1,63 @@
 package GUI;
 
+import java.net.Socket;
 import javax.swing.*;
 
 public class GUI extends JFrame {
 
-   private static final long serialVersionUID = 1L;
-   JButton prenota;
+   Socket socket;
+   JFrame frame;
+   JButton buttonPrenota;
+   JButton buttonStampa;
    JLabel  nameLabel;
    JLabel numLabel;
-   JTextField t;
-   JTextField seats;
+   JTextField nameTField;
+   JTextField seatsTField;
+   JTextArea textArea;
 
-   public GUI() {
-      super("Swing");
+   public GUI(Socket socket) {
+      this.socket = socket;
+      
+      frame = new JFrame();
+      frame.setTitle("ClientGUI");
 
       nameLabel = new JLabel("Nome evento: ");
-      t = new JTextField(16);
+      nameTField = new JTextField(16);
       numLabel = new JLabel("Posti da Prenotare: ");
-      seats = new JTextField(3);
-      prenota = new JButton("Prenota");
+      seatsTField = new JTextField(3);
+      buttonPrenota = new JButton("PRENOTA");
+      buttonStampa = new JButton("Stampa eventi disponobili");
 
-      MyListener button_handler  = new MyListener(this);
-      prenota.addActionListener(button_handler);
+      MyListener booking_handler = new MyListener(this, nameTField, seatsTField);
+      buttonPrenota.addActionListener(booking_handler);
 
-      JPanel Panel = new JPanel();
-      Panel.add(nameLabel);
-      Panel.add(t);
-      Panel.add(numLabel);
-      Panel.add(seats);
-      Panel.add(prenota);
+      MyListener print_handler  = new MyListener(this);
+      buttonStampa.addActionListener(print_handler);
+
+      textArea.setBounds(5, 210, 424, 203);
+
+      JPanel panel = new JPanel();
+      panel.add(nameLabel);
+      panel.add(nameTField);
+      panel.add(numLabel);
+      panel.add(seatsTField);
+      panel.add(buttonPrenota);
+      panel.add(buttonStampa);
+      panel.add(textArea);
       
-      getContentPane().add(Panel);
+      getContentPane().add(panel);
       setDefaultCloseOperation(EXIT_ON_CLOSE);
       setVisible(true);
       pack();
    }
 
-   public static void main(String[] args) {
-      SwingUtilities.invokeLater(new Runnable() {
-         @Override
-         public void run() {
-               new GUI();
-         }
-      });
-   }
+   // public static void main(String[] args) {
+
+   //    SwingUtilities.invokeLater(new Runnable() {
+   //       @Override
+   //       public void run() {
+   //             new GUI(socket);
+   //       }
+   //    });
+   // }
 }

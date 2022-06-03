@@ -115,12 +115,15 @@ public class Eventi{
       } // end while
    }
 
-   public void ListaEventi(){
+   public String ListaEventi(){
+      String string = "";
+
       for (String key: ListaEventi.keySet()) {
          // String key = s.toString();
          int value = ListaEventi.get(key).getDisponibili();
-         System.out.println("Evento: "+key+"\t Posti disponibili: "+value);
+         string += ("\nEvento: "+key+"\t Posti disponibili: "+value);
      }
+     return string;
    }
 
    public synchronized void Chiudi(String NomeEvento){
