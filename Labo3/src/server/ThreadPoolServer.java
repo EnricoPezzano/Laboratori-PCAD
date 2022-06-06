@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import eventi.Admin;
 import eventi.Eventi;
 
 public class ThreadPoolServer {
@@ -15,29 +17,29 @@ public class ThreadPoolServer {
    protected boolean      isStopped    = false;
    protected Thread       runningThread= null;
    protected ExecutorService threadPool = Executors.newFixedThreadPool(10);
-   protected int port = 1234;
 
    public ThreadPoolServer(int port, Eventi ev){
       this.serverPort = port;
       this.ev = ev;
    }
 
-   public void start(){
+// TODO test
+
+   public void start() throws IOException{
       // synchronized(this){
       //    this.runningThread = Thread.currentThread();
       // }
-      ev.Crea("poolParty2", 20);
-      ev.Crea("natale2", 20);
-      ev.Crea("compleanno2", 20);
-
-      ev.Aggiungi("poolParty", 10);
-      ev.Aggiungi("compleanno", 10);
-      ev.Aggiungi("natale", 10);
+      // this.ServerBooks("poolParty2", 20); // cannot read PostiMax because is null
+      // this.ServerBooks("natale2", 20);
+      // this.ServerBooks("compleanno2", 20);
+      new Admin();
 
       try {
 			Thread.sleep(1000);
-			// serverSocket = new ServerSocket(this.port);
-		}
+         this.ServerAddSeats("poolParty", 10);
+         // this.ServerAddSeats("compleanno", 10); // cannot read PostiMax because is null
+         // this.ServerAddSeats("natale", 10);
+      }
       catch(InterruptedException e1){
 			e1.printStackTrace();
 		}
@@ -49,7 +51,8 @@ public class ThreadPoolServer {
       while(!isStopped()){
          Socket clientSocket = null;
          try {
-            clientSocket = this.serverSocket.accept();
+            // a questo punto inizializziamo il servizio per far connettere il client
+            clientSocket = serverSocket.accept(); // accept mette il server in ascolto sulla porta 1234 e aspetta un tentativo di utilizzo del servizio. Ritorna una variabile socket del client
          }
          catch (IOException e) {
             if(isStopped()) {
@@ -59,9 +62,10 @@ public class ThreadPoolServer {
             throw new RuntimeException(
                "Error accepting client connection", e);
          }
-         this.threadPool.execute(new WorkerRunnable(clientSocket, "Thread Pooled Server <3", ev));
-      }
-      this.threadPool.shutdown();
+         threadPool.execute(new WorkerRunnable(clientSocket, "Thread Pooled Server <3", ev));
+      } // end while
+
+      this.threadPool.shutdown(); 
       System.out.println("Server Stopped.") ;
    }
 
@@ -73,16 +77,20 @@ public class ThreadPoolServer {
       this.isStopped = true;
       try {
          this.serverSocket.close();
-      } catch (IOException e) {
+      }
+      catch (IOException e) {
+         e.printStackTrace();
          throw new RuntimeException("Error closing server", e);
       }
    }
 
-   private void openServerSocket() {
+   public void openServerSocket() {
       try {
          this.serverSocket = new ServerSocket(this.serverPort);
-      } catch (IOException e) {
-         throw new RuntimeException("Cannot open port 8080", e);
+      }
+      catch (IOException e) {
+         e.printStackTrace();
+         throw new RuntimeException("Cannot open port 1234", e);
       }
    }
 
@@ -92,5 +100,9 @@ public class ThreadPoolServer {
 
    public void ServerBooks(String eventoDaPrenotare, int postiDaPrenotare){
       ev.Prenota(eventoDaPrenotare, postiDaPrenotare);
+   }
+
+   public void ServerAddSeats(String eventoDaPrenotare, int postiDaAggiungere){
+      ev.Aggiungi(eventoDaPrenotare, postiDaAggiungere);
    }
 }

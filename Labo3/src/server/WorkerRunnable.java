@@ -26,33 +26,62 @@ public class WorkerRunnable implements Runnable{
    }
 
    public void run() {
+      String[] prenotazione = null;
       try {
          input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			String line;
          while ((line=input.readLine()) != null){
-            if(line.contains("-")){
-               String[] prenota = line.split("-");
-               if(prenota.length == 3){
-                  ev.Prenota(prenota[1], Integer.valueOf(prenota[2]));
+            if(line.contains(" ")) {
+					prenotazione = line.split(" ");
+					if(prenotazione.length == 2) {
+                  ServerBooks(prenotazione[1], Integer.valueOf(prenotazione[2]));
                   msg = "prenotazione effettuata";
                }
                else
-                  msg = "prenotazione sbagliata! (nomeEvento-postiDaPrenotare)"; 
+                  msg = "Bad formatting! Type: 'NomeEvento n°PostiDaPrenotare'";
+				}
+            else{
+               System.err.println("Error, wrong request");
+               System.exit(1);
             }
-            else
-               msg = "prenotazione sbagliata! (nomeEvento-postiDaPrenotare)"; 
-         }
+			
+				output = new PrintWriter (this.clientSocket.getOutputStream(), true);
+				output.println(msg);
+         } // end while
 
-         InputStream input  = clientSocket.getInputStream();
-         OutputStream output = clientSocket.getOutputStream();
+         ServerBooks(prenotazione[1], Integer.valueOf(prenotazione[2]));
+         msg = "prenotazione sbagliata! ('NomeEvento n°PostiDaPrenotare')";
+
+
+         InputStream input  = clientSocket.getInputStream(); // omonimi, ma di tipo diversi
+         OutputStream output = clientSocket.getOutputStream(); // omonimi, ma di tipo diversi
          long time = System.currentTimeMillis();
          output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +this.serverText + " - " + time + "").getBytes());
          output.close();
          input.close();
          System.out.println("Request processed time: " + time);
-      } catch (IOException e) {
+
+         if (input != null)
+				input.close();
+
+			if (output != null)
+				output.close();
+
+			this.clientSocket.close();
+			System.err.println("Connection to " + this.clientSocket.getRemoteSocketAddress() + " closed");
+
+      }
+      catch (IOException e) {
          //report exception somewhere.
          e.printStackTrace();
       }
    }
+
+   private void ServerBooks(String eventoDaPrenotare, int postiDaPrenotare){
+      ev.Prenota(eventoDaPrenotare, postiDaPrenotare);
+   }
+
+   // private void ServerAddSeats(String eventoDaPrenotare, int postiDaAggiungere){
+   //    ev.Aggiungi(eventoDaPrenotare, postiDaAggiungere);
+   // }
 }

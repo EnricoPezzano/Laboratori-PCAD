@@ -1,9 +1,11 @@
 package server;
 
+import java.io.IOException;
+
 import eventi.Eventi;
 
 public class Main{
-   public static void main(String[] args)
+   public static void main(String[] args) throws IOException
    {
       Eventi data = new Eventi();
       data.Crea("poolParty", 60);
