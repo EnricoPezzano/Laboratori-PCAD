@@ -2,7 +2,7 @@ package server;
 
 import java.io.IOException;
 
-import eventi.Eventi;
+import server.eventi.Eventi;
 
 public class Main{
    public static void main(String[] args) throws IOException

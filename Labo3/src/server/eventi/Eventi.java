@@ -1,4 +1,4 @@
-package eventi;
+package server.eventi;
 
 import java.util.concurrent.ConcurrentHashMap;
 

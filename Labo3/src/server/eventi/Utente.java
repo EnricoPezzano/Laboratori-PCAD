@@ -1,4 +1,4 @@
-package eventi;
+package server.eventi;
 
 public class Utente implements Runnable{
    public void run(){

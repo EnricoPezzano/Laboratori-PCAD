@@ -1,4 +1,4 @@
-package eventi;
+package server.eventi;
 
 public class Test extends Thread{
    public final static int numEventi = 5;

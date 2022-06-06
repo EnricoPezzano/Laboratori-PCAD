@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import eventi.Admin;
-import eventi.Eventi;
+import server.eventi.Admin;
+import server.eventi.Eventi;
 
 public class ThreadPoolServer {
    Eventi ev = new Eventi();
