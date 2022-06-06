@@ -35,7 +35,7 @@ public class WorkerRunnable implements Runnable{
             if(line.contains(" ")) {
 					prenotazione = line.split(" ");
 					if(prenotazione.length == 2) {
-                  ServerBooks(prenotazione[1], Integer.valueOf(prenotazione[2]));
+                  ServerBooks(prenotazione[0], Integer.valueOf(prenotazione[1]));
                   msg = "prenotazione effettuata";
                }
                else
