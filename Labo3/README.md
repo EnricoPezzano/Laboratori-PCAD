@@ -2,7 +2,7 @@ Da dentro src...
 
 -  Server:
 -  -  Da compilare con "javac server/\*.java"
--  -  Si esegue con "java server.ThreadPoolServer"
+-  -  Si esegue con "java server.Main"
 -  Client:
 -  -  Da compilare con "javac client/\*.java"
 -  -  Si esegue con "java client.Client"
